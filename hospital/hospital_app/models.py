@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 
 
 class User(AbstractUser):
@@ -34,6 +35,7 @@ class User(AbstractUser):
 
 
 class Appointment(models.Model):
+    User = get_user_model()
     date = models.DateField(auto_now_add=True)
     time = models.TimeField(auto_now_add=True)
 
@@ -44,8 +46,8 @@ class Appointment(models.Model):
     )
 
     status = models.CharField(choices=APPOINTMENT_STATUS, max_length=1, default='P')
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient')
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor')
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
 
     class Meta:
         verbose_name = 'Appointment'
@@ -61,8 +63,9 @@ class Drug(models.Model):
 
 
 class Prescription(models.Model):
-    doctor = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='doctor_prescription')
-    patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='patient_prescription')
+    User = get_user_model()
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_prescription')
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_prescription')
     date = models.DateField(auto_now_add=True)
     expiration = models.DateField('Expiration date', null=True, blank=True)
     symptoms = models.TextField('Symptoms', max_length=200)
@@ -74,8 +77,11 @@ class Prescription(models.Model):
 
 
 class PrescriptionLine(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete=models.SET_NULL, null=True)
-    drugs = models.ForeignKey(Drug, on_delete=models.SET_NULL, null=True)
+    prescription = models.ForeignKey(Prescription,
+                                     on_delete=models.SET_NULL,
+                                     null=True,
+                                     related_name='prescription_line')
+    drugs = models.ForeignKey(Drug, on_delete=models.SET_NULL, null=True, related_name='drug_line')
     qty = models.IntegerField('Quantity')
 
     class Meta:
