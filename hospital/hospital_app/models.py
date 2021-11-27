@@ -36,8 +36,9 @@ class User(AbstractUser):
 
 class Appointment(models.Model):
     User = get_user_model()
-    date = models.DateField(auto_now_add=True)
-    time = models.TimeField(auto_now_add=True)
+
+    date = models.DateField()
+    time = models.TimeField()
 
     APPOINTMENT_STATUS = (
         ('P', 'Pending'),
@@ -49,6 +50,9 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
 
+    def __str__(self):
+        return f'{self.date} Doctor: {self.doctor} Patient: {self.patient}'
+
     class Meta:
         verbose_name = 'Appointment'
         verbose_name_plural = 'Appointments'
@@ -56,6 +60,9 @@ class Appointment(models.Model):
 
 class Drug(models.Model):
     name = models.CharField('Name', max_length=200)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Drug'
@@ -71,6 +78,9 @@ class Prescription(models.Model):
     symptoms = models.TextField('Symptoms', max_length=200)
     diagnosis = models.TextField('Diagnosis', max_length=1000)
 
+    def __str__(self):
+        return f'prescription id:{self.pk} for {self.patient}'
+
     class Meta:
         verbose_name = 'Prescription'
         verbose_name_plural = 'Prescriptions'
@@ -83,6 +93,9 @@ class PrescriptionLine(models.Model):
                                      related_name='prescription_line')
     drugs = models.ForeignKey(Drug, on_delete=models.SET_NULL, null=True, related_name='drug_line')
     qty = models.IntegerField('Quantity')
+
+    def __str__(self):
+        return f'line id:{self.pk} {self.prescription}'
 
     class Meta:
         verbose_name = 'Prescription line'
