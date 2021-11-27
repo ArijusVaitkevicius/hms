@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+    <h1 align="center">Dashboard</h1>
+    <br>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <strong>Total Appointments</strong> - {{ totalApp }}
+        </li>
+        <li class="list-group-item">
+            <strong>Appointments Done</strong> - {{ compApp }}
+        </li>
+        <li class="list-group-item">
+            <strong>Upcoming Appointments</strong> - {{ pendApp }}
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <h3>Appointments -</h3>
+        <div class="card card-body">
+            <a href="{% url 'create_appointment' %}"><button class="btn btn-primary">Create Appointment</button></a>
+            <table class="table table-striped">
+                <thead>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Doctor</th>
+                    <th>Patient</th>
+                    <th>Status</th>
+                </thead>
+                {% for obj in app_list %}
+                <tr>
+                    <td>{{ obj.date }}</td>
+                    <td>{{ obj.time }}</td>
+                    <td>{{ obj.doctor }}</td>
+                    <td>{{ obj.patient }}</td>
+                    <td>{{ obj.status }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}
