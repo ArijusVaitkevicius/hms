@@ -32,10 +32,15 @@
                                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Second</a>
+                                    <a class="nav-link" href="#">Second doctor</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Third</a>
+                                    <a class="nav-link" href="#">Third doctor</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'logout' %}" class="btn btn-simple">
+                                        <button class="btn btn-warning">Log Out</button>
+                                    </a>
                                 </li>
                             <!--# doctor's dashboard #-->
                             {% endif %}
@@ -45,10 +50,15 @@
                                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Second</a>
+                                    <a class="nav-link" href="#">Second patient</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Third</a>
+                                    <a class="nav-link" href="#">Third patient</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'logout' %}" class="btn btn-simple">
+                                        <button class="btn btn-warning">Log Out</button>
+                                    </a>
                                 </li>
                             <!--# patient's dashboard #-->
                             {% endif %}
@@ -58,10 +68,15 @@
                                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Second</a>
+                                    <a class="nav-link" href="#">Second receptionist</a>
                                 </li>
                                 <li class="nav-item pl-1">
-                                    <a class="nav-link" href="#">Third</a>
+                                    <a class="nav-link" href="#">Third receptionist</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'logout' %}" class="btn btn-simple">
+                                        <button class="btn btn-warning">Log Out</button>
+                                    </a>
                                 </li>
                             <!--# receptionist's dashboard #-->
                             {% endif %}
