@@ -2,25 +2,14 @@ from django.shortcuts import render, redirect
 from .forms import AppointmentForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 def home(request):
     return render(request, 'home.html')
-
-
-@login_required(login_url='/login/')
-def appointment_create_view(request):
-    if request.method == 'POST':
-        form = AppointmentForm(request.POST)
-        if form.is_valid():
-            appointment = form.save(commit=False)
-            appointment.save()
-            return redirect('receptionist_dashboard')
-    else:
-        form = AppointmentForm()
-    return render(request, 'create_appointment.html', {'form': form})
 
 
 class ReceptionistDashboardListView(LoginRequiredMixin, ListView):
@@ -29,5 +18,11 @@ class ReceptionistDashboardListView(LoginRequiredMixin, ListView):
     context_object_name = 'appointments_list'
     paginate_by = 10
     ordering = 'date', 'time'
+    queryset = Appointment.objects.filter(status='P')
 
 
+class AppointmentCreateView(LoginRequiredMixin, CreateView):
+    model = Appointment
+    success_url = "/receptionist_dashboard/"
+    template_name = 'create_appointment.html'
+    form_class = AppointmentForm
