@@ -16,6 +16,7 @@
                     <th>Doctor</th>
                     <th>Patient</th>
                     <th>Status</th>
+                    <th>Update</th>
                 </thead>
                 {% for app in appointments_list %}
                 <tr>
@@ -24,6 +25,9 @@
                     <td>{{ app.doctor }}</td>
                     <td>{{ app.patient }}</td>
                     <td>{{ app.status }}</td>
+                    <td>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'appointment_update' app.id %}">Update</a>
+                    </td>
                 </tr>
                 {% endfor %}
             {% else %}

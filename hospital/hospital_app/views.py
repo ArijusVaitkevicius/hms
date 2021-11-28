@@ -26,3 +26,10 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     success_url = "/receptionist_dashboard/"
     template_name = 'create_appointment.html'
     form_class = AppointmentForm
+
+
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    success_url = "/receptionist_dashboard/"
+    template_name = 'create_appointment.html'
+    form_class = AppointmentForm
