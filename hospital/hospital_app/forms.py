@@ -10,7 +10,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email',)
+        fields = ('email', 'user_type')
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -59,4 +59,3 @@ class AppointmentForm(forms.ModelForm):
             self.fields['doctor'].queryset = User.objects.filter(user_type="D")
             self.fields["date"].label = "Date (YYYY-MM-DD)"
             self.fields["time"] = forms.ChoiceField(choices=CHOICES)
-
