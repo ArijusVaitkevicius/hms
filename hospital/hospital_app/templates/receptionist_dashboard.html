@@ -1,28 +1,14 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% load bootstrap3 %}
 
 {% block content %}
-<div class="container">
-    <h1 align="center">Dashboard</h1>
-    <br>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <strong>Total Appointments</strong> - {{ totalApp }}
-        </li>
-        <li class="list-group-item">
-            <strong>Appointments Done</strong> - {{ compApp }}
-        </li>
-        <li class="list-group-item">
-            <strong>Upcoming Appointments</strong> - {{ pendApp }}
-        </li>
-    </ul>
-</div>
-<div class="row">
-    <div class="col-md-5">
-        <h3>Appointments -</h3>
-        <div class="card card-body">
-            <a href="{% url 'create_appointment' %}"><button class="btn btn-primary">Create Appointment</button></a>
+<div class="col-md-12">
+    <a href="{% url 'create_appointment' %}"><button class="btn btn-primary" style="margin: 20px 0">Create Appointment</button></a>
+    <div>
+        <div>
+            <h3>Appointments:</h3>
+            {% if appointments_list %}
             <table class="table table-striped">
                 <thead>
                     <th>Date</th>
@@ -31,18 +17,37 @@
                     <th>Patient</th>
                     <th>Status</th>
                 </thead>
-                {% for obj in app_list %}
+                {% for app in appointments_list %}
                 <tr>
-                    <td>{{ obj.date }}</td>
-                    <td>{{ obj.time }}</td>
-                    <td>{{ obj.doctor }}</td>
-                    <td>{{ obj.patient }}</td>
-                    <td>{{ obj.status }}</td>
+                    <td>{{ app.date }}</td>
+                    <td>{{ app.time }}</td>
+                    <td>{{ app.doctor }}</td>
+                    <td>{{ app.patient }}</td>
+                    <td>{{ app.status }}</td>
                 </tr>
                 {% endfor %}
+            {% else %}
+              <p>There is currently no appointments.</p>
+            {% endif %}
             </table>
         </div>
     </div>
-    <br>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock %}

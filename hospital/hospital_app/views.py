@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import AppointmentForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
@@ -21,13 +23,11 @@ def appointment_create_view(request):
     return render(request, 'create_appointment.html', {'form': form})
 
 
-@login_required(login_url='/login/')
-def receptionist_dashboard(request):
-    if request.method == "GET" and request.user.user_type == "R":
-        context = {
-            "totalApp": len(Appointment.objects.all()),
-            "compApp": len(Appointment.objects.filter(status="C")),
-            "pendApp": len(Appointment.objects.filter(status="P")),
-            "app_list": Appointment.objects.all(),
-        }
-        return render(request, 'receptionist_dashboard.html', context=context)
+class ReceptionistDashboardListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'receptionist_dashboard.html'
+    context_object_name = 'appointments_list'
+    paginate_by = 10
+    ordering = 'date', 'time'
+
+
