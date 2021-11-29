@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Appointment, Drug, Prescription, PrescriptionLine
+from .models import CustomUser, Appointment, Drug, Prescription, PrescriptionLine, Profile
 
 
 class CustomUserAdmin(UserAdmin):
@@ -44,3 +44,4 @@ admin.site.register(Appointment, AppointmentAdmin)
 admin.site.register(Drug)
 admin.site.register(Prescription, PrescriptionAdmin)
 admin.site.register(PrescriptionLine)
+admin.site.register(Profile)

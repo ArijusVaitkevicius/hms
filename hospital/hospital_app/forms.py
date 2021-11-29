@@ -1,8 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, Appointment
+from .models import CustomUser, Appointment, Profile
 from django import forms
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
+
 User = get_user_model()
 
 
@@ -17,13 +18,16 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email', 'user_type')
 
 
-
-
 class CustomUserChangeForm(UserChangeForm):
-
     class Meta:
         model = CustomUser
         fields = ('email',)
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['photo']
 
 
 def working_hours():

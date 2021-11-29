@@ -31,15 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'hospital_app',
+    'hospital_app.apps.HospitalAppConfig',
+    'crispy_forms',
+    'bootstrap3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
-    'bootstrap3',
 
 ]
 
@@ -121,6 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'hospital_app/media')
+
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'hospital_app.CustomUser'
 
