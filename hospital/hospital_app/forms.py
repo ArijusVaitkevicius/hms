@@ -7,10 +7,16 @@ User = get_user_model()
 
 
 class CustomUserCreationForm(UserCreationForm):
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+    #     self.fields['user_type'].widget.attrs['disabled'] = 'disabled'
 
     class Meta:
         model = CustomUser
         fields = ('email', 'user_type')
+
+
 
 
 class CustomUserChangeForm(UserChangeForm):

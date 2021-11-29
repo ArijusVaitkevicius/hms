@@ -48,3 +48,11 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
     success_url = "/patients"
     template_name = 'add_patient.html'
     form_class = CustomUserCreationForm
+
+    def get_initial(self):
+        initial = super(PatientCreateView, self).get_initial()
+        initial.update({'user_type': 'P'})
+
+        return initial
+
+
