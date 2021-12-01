@@ -11,6 +11,7 @@ class CustomUserManager(BaseUserManager):
     Custom user model manager where email is the unique identifiers
     for authentication instead of usernames.
     """
+
     def create_user(self, email, password, **extra_fields):
         """
         Create and save a User with the given email and password.
@@ -50,7 +51,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('R', 'Receptionist')
     ]
 
-    user_type = models.CharField(choices=USER_CHOICES, max_length=1)
+    user_type = models.CharField(choices=USER_CHOICES, max_length=1, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -108,12 +109,22 @@ class Appointment(models.Model):
     APPOINTMENT_STATUS = (
         ('P', 'Pending'),
         ('C', 'Completed'),
-        ('X', 'Cancelled'),
+        # ('X', 'Cancelled'),
     )
 
     status = models.CharField(choices=APPOINTMENT_STATUS, max_length=1, default='P')
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
+
+    # @property
+    # def value(self):
+    #     if self.time == '08:00':
+    #         return self.APPOINTMENT_STATUS == (('P', 'Pending'),)
+    #     return self.APPOINTMENT_STATUS
+
+    # @property
+    # def time(self):
+    #     return self.TIMESLOT_LIST[self.timeslot][1]
 
     def __str__(self):
         return f'{self.date} Doctor: {self.doctor} Patient: {self.patient}'
@@ -121,6 +132,7 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = 'Appointment'
         verbose_name_plural = 'Appointments'
+        unique_together = ('doctor', 'date', 'time', 'status')
 
 
 class Drug(models.Model):

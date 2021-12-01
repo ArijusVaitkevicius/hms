@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+
+{% block content %}
+
+<div class="container">
+    <h2>Add new doctort</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input name='add' type="submit" value="Add" class="btn btn-success">
+    </form>
+</div>
+<script>
+var addButton = document.getElementsByName("add")[0];
+var userType = document.getElementsByName("user_type")[0];
+
+addButton.addEventListener("click", function () {
+   $(userType).removeAttr('disabled');
+});
+
+</script>
+{% endblock %}
+

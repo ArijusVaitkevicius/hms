@@ -3,12 +3,13 @@ from .models import CustomUser, Appointment, Profile
 from django import forms
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
+from django.forms.widgets import DateInput
 
 User = get_user_model()
 
 
 class CustomUserCreationForm(UserCreationForm):
-    #
+
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
         self.fields['user_type'].widget.attrs['disabled'] = 'disabled'
@@ -30,9 +31,9 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['photo']
 
 
-def working_hours():
-    start = datetime.strptime('08:00', '%H:%M')
-    end = datetime.strptime('20:00', '%H:%M')
+def working_hours(st, en):
+    start = datetime.strptime(st, '%H:%M')
+    end = datetime.strptime(en, '%H:%M')
     seq = [start]
 
     while seq[-1] < end:
@@ -54,18 +55,20 @@ def working_hours():
     return choices
 
 
-CHOICES = working_hours()
+# CHOICES = working_hours('08:00', '10:00')
 
 
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
         fields = '__all__'
+        widgets = {
+            'date': DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['patient'].queryset = User.objects.filter(user_type="P")
             self.fields['doctor'].queryset = User.objects.filter(user_type="D")
-            self.fields["date"].label = "Date (YYYY-MM-DD)"
-            self.fields["time"] = forms.ChoiceField(choices=CHOICES)
+            self.fields["time"] = forms.ChoiceField(choices=working_hours('08:00', '12:00'))

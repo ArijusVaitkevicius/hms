@@ -79,3 +79,23 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         return initial
 
 
+class DoctorsListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'doctors.html'
+    context_object_name = 'doctors_list'
+    paginate_by = 10
+    queryset = User.objects.filter(user_type='D')
+
+
+class DoctorCreateView(LoginRequiredMixin, CreateView):
+    model = CustomUser
+    success_url = "/doctors"
+    template_name = 'add_doctor.html'
+    form_class = CustomUserCreationForm
+
+    def get_initial(self):
+        initial = super(DoctorCreateView, self).get_initial()
+        initial.update({'user_type': 'D'})
+
+        return initial
+
