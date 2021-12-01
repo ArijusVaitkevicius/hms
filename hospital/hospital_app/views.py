@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Appointment, CustomUser
-from .forms import CustomUserChangeForm, ProfileUpdateForm
+from .models import Appointment, CustomUser, Profile
+from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -28,6 +28,29 @@ def profile(request):
     else:
         u_form = CustomUserChangeForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+    }
+    return render(request, 'profile.html', context)
+
+
+@login_required
+def doctor_profile(request, pk):
+    user = User.objects.get(pk=pk)
+    doc_profile = Profile.objects.get(user=user)
+    if request.method == "POST":
+        u_form = CustomUserChangeForm(request.POST, instance=user)
+        p_form = DoctorProfileUpdateForm(request.POST, request.FILES, instance=doc_profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"Profile updated")
+            return redirect('doctors')
+    else:
+        u_form = CustomUserChangeForm(instance=user)
+        p_form = DoctorProfileUpdateForm(instance=doc_profile)
 
     context = {
         'u_form': u_form,
@@ -118,13 +141,6 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
         initial.update({'user_type': 'D'})
 
         return initial
-
-
-class DoctorUpdateView(LoginRequiredMixin, UpdateView):
-    model = CustomUser
-    success_url = "/doctors"
-    template_name = 'update_doctor.html'
-    form_class = CustomUserChangeForm
 
 
 class DoctorDeleteView(LoginRequiredMixin, DeleteView):

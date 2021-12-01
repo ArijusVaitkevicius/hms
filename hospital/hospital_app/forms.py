@@ -31,6 +31,12 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['photo']
 
 
+class DoctorProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['photo', 'shift']
+
+
 def working_hours(st, en):
     start = datetime.strptime(st, '%H:%M')
     end = datetime.strptime(en, '%H:%M')

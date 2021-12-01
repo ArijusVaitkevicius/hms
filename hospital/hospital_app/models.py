@@ -90,6 +90,16 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = models.ImageField(default="default.png", upload_to="profile_pics")
 
+    SHIFT_CHOICES = [
+        (0, '08:00 - 12:00'),
+        (1, '10:00 - 14:00'),
+        (2, '12:00 - 16:00'),
+        (3, '14:00 - 18:00'),
+        (4, '16:00 - 20:00'),
+    ]
+
+    shift = models.CharField(choices=SHIFT_CHOICES, max_length=1, blank=True)
+
     def __str__(self):
         return f"{self.user} profile"
 
@@ -109,22 +119,11 @@ class Appointment(models.Model):
     APPOINTMENT_STATUS = (
         ('P', 'Pending'),
         ('C', 'Completed'),
-        # ('X', 'Cancelled'),
     )
 
     status = models.CharField(choices=APPOINTMENT_STATUS, max_length=1, default='P')
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
-
-    # @property
-    # def value(self):
-    #     if self.time == '08:00':
-    #         return self.APPOINTMENT_STATUS == (('P', 'Pending'),)
-    #     return self.APPOINTMENT_STATUS
-
-    # @property
-    # def time(self):
-    #     return self.TIMESLOT_LIST[self.timeslot][1]
 
     def __str__(self):
         return f'{self.date} Doctor: {self.doctor} Patient: {self.patient}'
