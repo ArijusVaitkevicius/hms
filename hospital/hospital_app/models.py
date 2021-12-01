@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from PIL import Image
+from django.core.validators import RegexValidator
 
 
 class CustomUserManager(BaseUserManager):
@@ -87,9 +88,9 @@ User = get_user_model()
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    photo = models.ImageField(default="default.png", upload_to="profile_pics")
-
+    phone_regex = RegexValidator(regex=r'(86|\+3706)\d{3}\d{4}',
+                                 message="Phone number must be entered in the format: '+3706******* or 86*******'. "
+                                         "Up to 12 digits allowed.")
     SHIFT_CHOICES = [
         ('0', '08:00 - 12:00'),
         ('1', '10:00 - 14:00'),
@@ -98,7 +99,32 @@ class Profile(models.Model):
         ('4', '16:00 - 20:00'),
     ]
 
-    shift = models.CharField(choices=SHIFT_CHOICES, max_length=1, blank=True)
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other')
+    ]
+
+    BLOOD_GROUPS = [
+        ('O-', 'O-'),
+        ('O+', 'O+'),
+        ('A-', 'A-'),
+        ('A+', 'A+'),
+        ('B-', 'B-'),
+        ('B+', 'B+'),
+        ('AB-', 'AB-'),
+        ('AB+', 'AB+'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True, null=True)
+    surname = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)
+    photo = models.ImageField(default="default.png", upload_to="profile_pics")
+    shift = models.CharField(choices=SHIFT_CHOICES, max_length=1, blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    address = models.CharField(max_length=500, blank=True, null=True)
+    blood_group = models.CharField(choices=BLOOD_GROUPS, max_length=3, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} profile"

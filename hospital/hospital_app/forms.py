@@ -29,12 +29,18 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['photo']
+        widgets = {
+            'date': DateInput(attrs={'type': 'birth_date'}),
+        }
 
 
 class DoctorProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['photo', 'shift']
+        fields = ['name', 'surname', 'phone',  'birth_date', 'address', 'photo', 'shift']
+        widgets = {
+            'birth_date': DateInput(attrs={'type': 'date'}),
+        }
 
 
 def working_hours(st, en):
