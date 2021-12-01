@@ -43,6 +43,15 @@ class DoctorProfileUpdateForm(forms.ModelForm):
         }
 
 
+class PatientProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['name', 'surname', 'phone',  'birth_date', 'address', 'photo', 'blood_group']
+        widgets = {
+            'birth_date': DateInput(attrs={'type': 'date'}),
+        }
+
+
 def working_hours(st, en):
     start = datetime.strptime(st, '%H:%M')
     end = datetime.strptime(en, '%H:%M')

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment, CustomUser, Profile
-from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm
+from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -60,6 +60,30 @@ def doctor_profile(request, pk):
     return render(request, 'update_profile.html', context)
 
 
+@login_required
+def patient_profile(request, pk):
+    user = User.objects.get(pk=pk)
+    pat_profile = Profile.objects.get(user=user)
+    if request.method == "POST":
+        u_form = CustomUserChangeForm(request.POST, instance=user)
+        p_form = PatientProfileUpdateForm(request.POST, request.FILES, instance=pat_profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"Profile updated")
+            return redirect('patients')
+    else:
+        u_form = CustomUserChangeForm(instance=user)
+        p_form = PatientProfileUpdateForm(instance=pat_profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form,
+        # 'user': user,
+    }
+    return render(request, 'update_profile.html', context)
+
+
 class AppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
@@ -108,13 +132,6 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         initial.update({'user_type': 'P'})
 
         return initial
-
-
-class PatientUpdateView(LoginRequiredMixin, UpdateView):
-    model = CustomUser
-    success_url = "/patients"
-    template_name = 'update_patient.html'
-    form_class = CustomUserChangeForm
 
 
 class PatientDeleteView(LoginRequiredMixin, DeleteView):
