@@ -58,6 +58,12 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     form_class = AppointmentForm
 
 
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    success_url = "/appointments"
+    template_name = 'delete_appointment.html'
+
+
 class PatientsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'patients.html'
