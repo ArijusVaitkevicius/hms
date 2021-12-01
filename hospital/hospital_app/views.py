@@ -55,8 +55,9 @@ def doctor_profile(request, pk):
     context = {
         'u_form': u_form,
         'p_form': p_form,
+        # 'user': user,
     }
-    return render(request, 'profile.html', context)
+    return render(request, 'update_profile.html', context)
 
 
 class AppointmentsListView(LoginRequiredMixin, ListView):

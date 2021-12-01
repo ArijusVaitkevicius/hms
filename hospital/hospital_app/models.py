@@ -91,11 +91,11 @@ class Profile(models.Model):
     photo = models.ImageField(default="default.png", upload_to="profile_pics")
 
     SHIFT_CHOICES = [
-        (0, '08:00 - 12:00'),
-        (1, '10:00 - 14:00'),
-        (2, '12:00 - 16:00'),
-        (3, '14:00 - 18:00'),
-        (4, '16:00 - 20:00'),
+        ('0', '08:00 - 12:00'),
+        ('1', '10:00 - 14:00'),
+        ('2', '12:00 - 16:00'),
+        ('3', '14:00 - 18:00'),
+        ('4', '16:00 - 20:00'),
     ]
 
     shift = models.CharField(choices=SHIFT_CHOICES, max_length=1, blank=True)
