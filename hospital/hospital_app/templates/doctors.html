@@ -12,10 +12,18 @@
             <table class="table table-striped">
                 <thead>
                     <th>Email</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </thead>
                 {% for doc in doctors_list %}
                 <tr>
                     <td>{{ doc.email }}</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_doctor' doc.id %}">Update</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_doctor' doc.id %}">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             {% else %}

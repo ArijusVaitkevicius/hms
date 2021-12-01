@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+
 User = get_user_model()
 
 
@@ -85,6 +86,19 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         return initial
 
 
+class PatientUpdateView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    success_url = "/patients"
+    template_name = 'update_patient.html'
+    form_class = CustomUserChangeForm
+
+
+class PatientDeleteView(LoginRequiredMixin, DeleteView):
+    model = CustomUser
+    success_url = "/patients"
+    template_name = 'delete_patient.html'
+
+
 class DoctorsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'doctors.html'
@@ -105,3 +119,15 @@ class DoctorCreateView(LoginRequiredMixin, CreateView):
 
         return initial
 
+
+class DoctorUpdateView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    success_url = "/doctors"
+    template_name = 'update_doctor.html'
+    form_class = CustomUserChangeForm
+
+
+class DoctorDeleteView(LoginRequiredMixin, DeleteView):
+    model = CustomUser
+    success_url = "/doctors"
+    template_name = 'delete_doctor.html'
