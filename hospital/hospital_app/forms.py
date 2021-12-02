@@ -105,7 +105,8 @@ def working_hours(timeslot):
 
 class AppointmentForm(forms.ModelForm):
 
-    timeslot = None
+    timeslot = ''
+    doc = ''
 
     class Meta:
         model = Appointment

@@ -133,6 +133,15 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'update_appointment.html'
     form_class = AppointmentForm
 
+    def get_initial(self):
+        new_pk = str(Appointment.objects.get(pk=self.kwargs['pk']).patient.pk)
+        initial = super(AppointmentUpdateView, self).get_initial()
+        initial.update({'patient': User.objects.get(pk=new_pk)})
+        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+        AppointmentForm.timeslot = User.objects.get(pk=new_pk).my_doctor.profile.shift
+
+        return initial
+
 
 class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
     model = Appointment
