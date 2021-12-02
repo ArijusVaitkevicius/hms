@@ -12,12 +12,16 @@
             <table class="table table-striped">
                 <thead>
                     <th>Email</th>
+                    <th>Appointment</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </thead>
                 {% for pat in patients_list %}
                 <tr>
                     <td>{{ pat.email }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
+                    </td>
                     <td>
                         <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
                     </td>

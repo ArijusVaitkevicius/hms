@@ -54,6 +54,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     user_type = models.CharField(choices=USER_CHOICES, max_length=1, null=True, blank=True)
 
+    my_doctor = models.ForeignKey(
+        'CustomUser',
+        on_delete=models.CASCADE,
+        limit_choices_to={'user_type': 'D'},
+        null=True,
+        blank=True,
+    )
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -116,7 +124,7 @@ class Profile(models.Model):
         ('AB+', 'AB+'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(max_length=50, blank=True, null=True)
     surname = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, null=True)

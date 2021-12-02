@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment, CustomUser, Profile
-from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm
+from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
+    PatientCustomUserChangeForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -65,7 +66,7 @@ def patient_profile(request, pk):
     user = User.objects.get(pk=pk)
     pat_profile = Profile.objects.get(user=user)
     if request.method == "POST":
-        u_form = CustomUserChangeForm(request.POST, instance=user)
+        u_form = PatientCustomUserChangeForm(request.POST, instance=user)
         p_form = PatientProfileUpdateForm(request.POST, request.FILES, instance=pat_profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
@@ -73,7 +74,7 @@ def patient_profile(request, pk):
             messages.success(request, f"Profile updated")
             return redirect('patients')
     else:
-        u_form = CustomUserChangeForm(instance=user)
+        u_form = PatientCustomUserChangeForm(instance=user)
         p_form = PatientProfileUpdateForm(instance=pat_profile)
 
     context = {
@@ -82,6 +83,24 @@ def patient_profile(request, pk):
         # 'user': user,
     }
     return render(request, 'update_profile.html', context)
+
+
+# @login_required
+# def create_appointment(request, pk):
+#     user = User.objects.get(pk=pk)
+#     if request.method == "POST":
+#         form = AppointmentForm(request.POST, instance=user)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, f"Appointment created")
+#             return redirect('patients')
+#     else:
+#         form = AppointmentForm(instance=user)
+#
+#     context = {
+#         'u_form': form,
+#     }
+#     return render(request, 'create_appointment.html', context)
 
 
 class AppointmentsListView(LoginRequiredMixin, ListView):
@@ -98,6 +117,14 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     success_url = "/appointments"
     template_name = 'create_appointment.html'
     form_class = AppointmentForm
+
+    def get_initial(self):
+        initial = super(AppointmentCreateView, self).get_initial()
+        initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
+        initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
+        AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
+
+        return initial
 
 
 class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
