@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+    <a href="{% url 'update_patient' customuser.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update patient</button></a>
+    <a href="{% url 'delete_patient' customuser.id %}"><button class="btn btn-danger" style="margin: 20px 0">Delete patient</button></a>
 
     <div class="media">
         <img class="rounded-circle account-img" src="{{ customuser.profile.photo.url }}">
         <div class="media-body">
           <h2 class="account-heading">{{ customuser.profile.name }} {{ customuser.profile.surname }}</h2>
           <p class="text-secondary"><strong>Email: </strong>{{ customuser.email }}</p>
-          <p class="text-secondary"><strong>Doctor: </strong><a href="{% url 'doctor' customuser.my_doctor.id %}">{{ customuser.my_doctor }}</a></p>
+          <p class="text-secondary"><strong>Doctor: </strong><a href="{% url 'doctor' customuser.my_doctor.id %}">{{ customuser.my_doctor.profile.name }} {{ customuser.my_doctor.profile.surname }}</a></p>
           <p class="text-secondary"><strong>Phone: </strong>{{ customuser.profile.phone }}</p>
           <p class="text-secondary"><strong>Birth date: </strong>{{ customuser.profile.birth_date }}</p>
           <p class="text-secondary"><strong>Address: </strong>{{ customuser.profile.address }}</p>

@@ -11,12 +11,16 @@
             {% if doctors_list %}
             <table class="table table-striped">
                 <thead>
+                    <th>Name</th>
+                    <th>Surname</th>
                     <th>Email</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </thead>
                 {% for doc in doctors_list %}
                 <tr>
+                    <td>{{ doc.profile.name }}</td>
+                    <td>{{ doc.profile.surname }}</td>
                     <td><a href="{% url 'doctor' doc.id %}">{{ doc.email }}</a></td>
                     <td>
                         <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_doctor' doc.id %}">Update</a>

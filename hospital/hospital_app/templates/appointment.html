@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1></h1>
+  <a href="{% url 'update_appointment' appointment.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update appointment</button></a>
+  <a href="{% url 'delete_appointment' appointment.id %}"><button class="btn btn-danger" style="margin: 20px 0">Delete appointment</button></a>
 
-  <p><strong>Patient:</strong> <a href="{% url 'patient' appointment.patient.id %}">{{ appointment.patient }}</a></p>
-  <p><strong>Doctor:</strong> <a href="{% url 'doctor' appointment.doctor.id %}">{{ appointment.doctor }}</a></p>
+
+  <p><strong>Patient:</strong> <a href="{% url 'patient' appointment.patient.id %}">{{ appointment.patient.profile.name }} {{ appointment.patient.profile.surname }}</a></p>
+  <p><strong>Doctor:</strong> <a href="{% url 'doctor' appointment.doctor.id %}">{{ appointment.doctor.profile.name }} {{ appointment.doctor.profile.surname }}</a></p>
   <p><strong>Date:</strong> {{ appointment.date }}</p>
   <p><strong>Time:</strong> {{ appointment.time }}</p>
   <p><strong>Status:</strong> {{ appointment.status }}</p>

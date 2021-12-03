@@ -11,6 +11,8 @@
             {% if patients_list %}
             <table class="table table-striped">
                 <thead>
+                    <th>Name</th>
+                    <th>Surname</th>
                     <th>Email</th>
                     <th>Appointment</th>
                     <th>Update</th>
@@ -18,6 +20,8 @@
                 </thead>
                 {% for pat in patients_list %}
                 <tr>
+                    <td>{{ pat.profile.name }}</td>
+                    <td>{{ pat.profile.surname }}</td>
                     <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>

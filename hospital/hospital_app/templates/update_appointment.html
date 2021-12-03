@@ -8,7 +8,18 @@
     <form method="POST">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <input type="submit" value="Update" class="btn btn-success">
+        <input name='add' type="submit" value="Update" class="btn btn-success">
     </form>
 </div>
+<script>
+var addButton = document.getElementsByName("add")[0];
+var patient = document.getElementsByName("patient")[0];
+var doctor = document.getElementsByName("doctor")[0];
+
+addButton.addEventListener("click", function () {
+    $(patient).removeAttr('disabled');
+    $(doctor).removeAttr('disabled');
+});
+
+</script>
 {% endblock %}

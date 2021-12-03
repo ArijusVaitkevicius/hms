@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.views.generic.list import MultipleObjectMixin
 
 User = get_user_model()
 
@@ -194,9 +195,15 @@ class DoctorsListView(LoginRequiredMixin, ListView):
     queryset = User.objects.filter(user_type='D')
 
 
-class DoctorsDetailView(LoginRequiredMixin, DetailView):
+class DoctorsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     model = User
     template_name = 'doctor.html'
+    paginate_by = 15
+
+    def get_context_data(self, **kwargs):
+        object_list = Appointment.objects.filter(doctor=self.get_object())
+        context = super(DoctorsDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
 
 
 class DoctorCreateView(LoginRequiredMixin, CreateView):

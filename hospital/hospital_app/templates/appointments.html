@@ -23,14 +23,14 @@
                 <tr>
                     <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
-                    <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor }}</a></td>
-                    <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient }}</a></td>
+                    <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</a></td>
+                    <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
                     <td>{{ app.status }}</td>
                     <td>
                         <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'appointment' app.id %}">Details</a>
                     </td>
                     <td>
-                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
                     </td>
                     <td>
                         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_appointment' app.id %}">Delete</a>
