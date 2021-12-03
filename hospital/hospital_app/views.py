@@ -112,6 +112,11 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
     queryset = Appointment.objects.filter(status='P')
 
 
+class AppointmentsDetailView(LoginRequiredMixin, DetailView):
+    model = Appointment
+    template_name = 'appointment.html'
+
+
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
     success_url = "/appointments"
@@ -157,6 +162,11 @@ class PatientsListView(LoginRequiredMixin, ListView):
     queryset = User.objects.filter(user_type='P')
 
 
+class PatientsDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'patient.html'
+
+
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = CustomUser
     success_url = "/patients"
@@ -182,6 +192,11 @@ class DoctorsListView(LoginRequiredMixin, ListView):
     context_object_name = 'doctors_list'
     paginate_by = 10
     queryset = User.objects.filter(user_type='D')
+
+
+class DoctorsDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'doctor.html'
 
 
 class DoctorCreateView(LoginRequiredMixin, CreateView):

@@ -18,7 +18,7 @@
                 </thead>
                 {% for pat in patients_list %}
                 <tr>
-                    <td>{{ pat.email }}</td>
+                    <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
                     </td>

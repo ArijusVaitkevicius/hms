@@ -15,6 +15,7 @@
                     <th>Doctor</th>
                     <th>Patient</th>
                     <th>Status</th>
+                    <th>Detail</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </thead>
@@ -22,15 +23,19 @@
                 <tr>
                     <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
-                    <td>{{ app.doctor }}</td>
-                    <td>{{ app.patient }}</td>
+                    <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor }}</a></td>
+                    <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient }}</a></td>
                     <td>{{ app.status }}</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'appointment' app.id %}">Details</a>
+                    </td>
                     <td>
                         <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
                     </td>
                     <td>
                         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_appointment' app.id %}">Delete</a>
                     </td>
+
                 </tr>
                 {% endfor %}
             {% else %}

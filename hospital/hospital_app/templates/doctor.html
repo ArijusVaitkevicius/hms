@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ customuser.profile.photo.url }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ customuser.profile.name }} {{ customuser.profile.surname }}</h2>
+          <p class="text-secondary"><strong>Email: </strong>{{ customuser.email }}</p>
+          <p class="text-secondary"><strong>Phone: </strong>{{ customuser.profile.phone }}</p>
+          <p class="text-secondary"><strong>Birth date: </strong>{{ customuser.profile.birth_date }}</p>
+          <p class="text-secondary"><strong>Address: </strong>{{ customuser.profile.address }}</p>
+          <p class="text-secondary"><strong>Shift: </strong>{{ customuser.profile.shift }}</p>
+        </div>
+    </div>
+
+
+{% endblock %}
