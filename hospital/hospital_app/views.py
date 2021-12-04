@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Appointment, CustomUser, Profile
+from .models import Appointment, CustomUser, Profile, Prescription
 from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
     PatientCustomUserChangeForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -165,6 +165,13 @@ class PatientsListView(LoginRequiredMixin, ListView):
 class PatientsDetailView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'patient.html'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        object_list = Prescription.objects.filter(patient=self.get_object())
+        context = super(PatientsDetailView, self).get_context_data(object_list=object_list, **kwargs)
+
+        return context
 
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
@@ -202,6 +209,7 @@ class DoctorsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     def get_context_data(self, **kwargs):
         object_list = Appointment.objects.filter(doctor=self.get_object())
         context = super(DoctorsDetailView, self).get_context_data(object_list=object_list, **kwargs)
+
         return context
 
 

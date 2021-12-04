@@ -16,6 +16,16 @@
           <p class="text-secondary"><strong>Blood group: </strong>{{ customuser.profile.blood_group }}</p>
         </div>
     </div>
-
+    {% if object_list %}
+      <ul>
+        {% for pre in object_list %}
+          <li>
+            <hr> {{ pre.date }} {{ pre.expiration }} <hr>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+        <p>No prescriptions.</p>
+    {% endif %}
 
 {% endblock %}

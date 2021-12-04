@@ -205,6 +205,7 @@ class Prescription(models.Model):
     class Meta:
         verbose_name = 'Prescription'
         verbose_name_plural = 'Prescriptions'
+        ordering = ['-date']
 
 
 class PrescriptionLine(models.Model):
