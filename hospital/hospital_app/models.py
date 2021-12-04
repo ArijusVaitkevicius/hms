@@ -5,6 +5,11 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from PIL import Image
 from django.core.validators import RegexValidator
+from datetime import date
+from datetime import datetime
+import pytz
+
+utc = pytz.UTC
 
 
 class CustomUserManager(BaseUserManager):
@@ -159,12 +164,19 @@ class Appointment(models.Model):
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
 
+    @property
+    def is_overdue(self):
+        if date.today() > self.date or date.today() == self.date and datetime.time(datetime.now()) > self.time:
+            return True
+        return False
+
     def __str__(self):
         return f'{self.date} Doctor: {self.doctor} Patient: {self.patient}'
 
     class Meta:
         verbose_name = 'Appointment'
         verbose_name_plural = 'Appointments'
+        ordering = ['-date', '-time']
         unique_together = ('doctor', 'date', 'time', 'status')
 
 

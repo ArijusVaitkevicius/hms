@@ -109,8 +109,7 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
     template_name = 'appointments.html'
     context_object_name = 'appointments_list'
     paginate_by = 10
-    ordering = 'date', 'time'
-    queryset = Appointment.objects.filter(status='P')
+    # queryset = Appointment.objects.filter(status='P')
 
 
 class AppointmentsDetailView(LoginRequiredMixin, DetailView):
@@ -198,7 +197,7 @@ class DoctorsListView(LoginRequiredMixin, ListView):
 class DoctorsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     model = User
     template_name = 'doctor.html'
-    paginate_by = 15
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         object_list = Appointment.objects.filter(doctor=self.get_object())

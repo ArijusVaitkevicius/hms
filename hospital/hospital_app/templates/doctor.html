@@ -18,7 +18,7 @@
     <div style="margin-left:20px;margin-top:20px">
     <h4>Appointments:</h4>
             {% if object_list %}
-            <table class="table table-striped">
+            <table class="table table-hover">
                 <thead>
                     <th>Date</th>
                     <th>Time</th>
@@ -28,8 +28,8 @@
                     <th>Update</th>
                     <th>Delete</th>
                 </thead>
-                {% for app in object_list|dictsortreversed:"time"|dictsortreversed:"date" %}
-                <tr>
+                {% for app in object_list %}
+                <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
                     <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
