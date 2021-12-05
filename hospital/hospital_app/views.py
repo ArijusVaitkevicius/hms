@@ -143,7 +143,9 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
         initial = super(AppointmentUpdateView, self).get_initial()
         initial.update({'patient': User.objects.get(pk=new_pk)})
         initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+
         AppointmentForm.timeslot = User.objects.get(pk=new_pk).my_doctor.profile.shift
+        AppointmentForm.timestamp = str(Appointment.objects.get(pk=self.kwargs['pk']).time)
 
         return initial
 

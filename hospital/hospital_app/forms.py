@@ -106,6 +106,7 @@ def working_hours(timeslot):
 class AppointmentForm(forms.ModelForm):
 
     timeslot = ''
+    timestamp = ''
     doc = ''
 
     class Meta:
@@ -119,6 +120,7 @@ class AppointmentForm(forms.ModelForm):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['time'] = forms.ChoiceField(choices=working_hours(self.timeslot))
+            self.initial['time'] = self.timestamp[:5]
             self.fields['patient'].widget.attrs['disabled'] = 'disabled'
             self.fields['doctor'].widget.attrs['disabled'] = 'disabled'
 
