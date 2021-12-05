@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.generic.list import MultipleObjectMixin
+from .filters import AppointmentFilter
 
 User = get_user_model()
 
@@ -107,9 +108,18 @@ def patient_profile(request, pk):
 class AppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
-    context_object_name = 'appointments_list'
+    # context_object_name = 'appointments_list'
     paginate_by = 10
     # queryset = Appointment.objects.filter(status='P')
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentsListView, self).get_context_data(**kwargs)
+        appointments_list = Appointment.objects.all()
+        my_filter = AppointmentFilter(self.request.GET, queryset=appointments_list)
+        appointments_list = my_filter.qs
+        context['my_filter'] = my_filter
+        context['appointments_list'] = appointments_list
+        return context
 
 
 class AppointmentsDetailView(LoginRequiredMixin, DetailView):

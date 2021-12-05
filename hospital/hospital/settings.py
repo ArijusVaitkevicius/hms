@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'hospital_app.apps.HospitalAppConfig',
     'crispy_forms',
     'bootstrap3',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
