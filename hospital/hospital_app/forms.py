@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
 from .models import CustomUser, Appointment, Profile, Prescription
 from django import forms
 from django.contrib.auth import get_user_model
@@ -20,12 +20,16 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
+    password = None
+
     class Meta:
         model = CustomUser
         fields = ('email',)
 
 
 class PatientCustomUserChangeForm(UserChangeForm):
+    password = None
+
     class Meta:
         model = CustomUser
         fields = ('email', 'my_doctor')
@@ -43,7 +47,7 @@ class ProfileUpdateForm(forms.ModelForm):
 class DoctorProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'surname', 'phone',  'birth_date', 'address', 'photo', 'shift']
+        fields = ['name', 'surname', 'phone', 'birth_date', 'address', 'photo', 'shift']
         widgets = {
             'birth_date': DateInput(attrs={'type': 'date'}),
         }
@@ -52,14 +56,13 @@ class DoctorProfileUpdateForm(forms.ModelForm):
 class PatientProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'surname', 'phone',  'birth_date', 'address', 'photo', 'blood_group']
+        fields = ['name', 'surname', 'phone', 'birth_date', 'address', 'photo', 'blood_group']
         widgets = {
             'birth_date': DateInput(attrs={'type': 'date'}),
         }
 
 
 def working_hours(timeslot):
-
     if timeslot == '0':
         st = '08:00'
         en = '12:00'
@@ -104,7 +107,6 @@ def working_hours(timeslot):
 
 
 class AppointmentForm(forms.ModelForm):
-
     timeslot = ''
     timestamp = ''
     doc = ''
@@ -126,7 +128,6 @@ class AppointmentForm(forms.ModelForm):
 
 
 class PrescriptionForm(forms.ModelForm):
-
     class Meta:
         model = Prescription
         fields = ['patient', 'doctor', 'expiration', 'symptoms', 'diagnosis']
