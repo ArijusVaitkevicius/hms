@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="col-md-12">
-    <a href="{% url 'add_patient' %}"><button class="btn btn-primary" style="margin: 20px 0">Add Patient</button></a>
+    <a href="{% url 'add_patient' %}"><button class="btn btn-success" style="margin: 20px 0">Add Patient</button></a>
     <div>
         <div>
             <h3>Patients:</h3>
@@ -24,10 +24,10 @@
                     <td>{{ pat.profile.surname }}</td>
                     <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
                     <td>
-                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
+                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
                     </td>
                     <td>
-                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
                     </td>
                     <td>
                         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_patient' pat.id %}">Delete</a>

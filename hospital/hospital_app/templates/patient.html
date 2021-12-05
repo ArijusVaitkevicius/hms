@@ -25,6 +25,7 @@
                     <th>Date</th>
                     <th>Doctor</th>
                     <th>Expiration</th>
+                    <th>Prescription</th>
                     <th>Detail</th>
                     <th>Update</th>
                 </thead>
@@ -34,7 +35,10 @@
                         <td><a href="{% url 'doctor' pre.doctor.id %}">{{ pre.doctor.profile.name }}{{ pre.doctor.profile.surname }}</a></td>
                         <td>{{ pre.expiration }}</td>
                         <td>
-                            <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
+                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_prescription' pre.id %}">Create prescription</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
                         </td>
                         <td>
                             <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_prescription' pre.id %}">Update</a>

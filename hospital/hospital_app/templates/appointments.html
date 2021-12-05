@@ -27,7 +27,7 @@
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
                     <td>{{ app.status }}</td>
                     <td>
-                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'appointment' app.id %}">Details</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'appointment' app.id %}">Details</a>
                     </td>
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>

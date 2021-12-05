@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="col-md-12">
-    <a href="{% url 'add_doctor' %}"><button class="btn btn-primary" style="margin: 20px 0">Add Doctor</button></a>
+    <a href="{% url 'add_doctor' %}"><button class="btn btn-success" style="margin: 20px 0">Add Doctor</button></a>
     <div>
         <div>
             <h3>Doctors:</h3>
@@ -23,7 +23,7 @@
                     <td>{{ doc.profile.surname }}</td>
                     <td><a href="{% url 'doctor' doc.id %}">{{ doc.email }}</a></td>
                     <td>
-                        <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'update_doctor' doc.id %}">Update</a>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_doctor' doc.id %}">Update</a>
                     </td>
                     <td>
                         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_doctor' doc.id %}">Delete</a>

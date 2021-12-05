@@ -237,19 +237,21 @@ class PrescriptionDetailView(LoginRequiredMixin, DetailView):
     template_name = 'prescription.html'
 
 
-# class PrescriptionCreateView(LoginRequiredMixin, CreateView):
-#     model = Prescription
-#     success_url = "/prescriptions"
-#     template_name = 'create_prescription.html'
-#     form_class = PrescriptionForm
-#
-#     def get_initial(self):
-#         initial = super(AppointmentCreateView, self).get_initial()
-#         initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
-#         initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
-#         AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
-#
-#         return initial
+class PrescriptionCreateView(LoginRequiredMixin, CreateView):
+    model = Prescription
+    template_name = 'create_prescription.html'
+    form_class = PrescriptionForm
+
+    def get_success_url(self):
+        return reverse('prescription', kwargs={'pk': self.object.id})
+
+    def get_initial(self):
+        new_pk = str(Prescription.objects.get(pk=self.kwargs['pk']).patient.pk)
+        initial = super(PrescriptionCreateView, self).get_initial()
+        initial.update({'patient': User.objects.get(pk=new_pk)})
+        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+
+        return initial
 
 
 class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
