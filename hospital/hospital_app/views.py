@@ -10,18 +10,35 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.generic.list import MultipleObjectMixin
 from .filters import AppointmentFilter, PatientFilter, DoctorFilter
+from datetime import date
 
 User = get_user_model()
 
 
 def home(request):
-    appointments = Appointment.objects.all().order_by('-id')[:5]
-    patients = User.objects.all().filter(user_type='P').order_by('-id')[:3]
-    doctors = User.objects.all().filter(user_type='D').order_by('-id')[:3]
+    if request.user.is_authenticated:
+        if request.user.user_type == 'R':
+            appointments = Appointment.objects.all().order_by('-id')[:5]
+            patients = User.objects.all().filter(user_type='P').order_by('-id')[:3]
+            doctors = User.objects.all().filter(user_type='D').order_by('-id')[:3]
 
-    context = {'appointments': appointments, 'patients': patients, 'doctors': doctors}
+            context = {'appointments': appointments, 'patients': patients, 'doctors': doctors}
 
-    return render(request, 'home.html', context)
+            return render(request, 'receptionist_home.html', context)
+
+        elif request.user.user_type == 'D':
+            completed_appointments = Appointment.objects.filter(status='C', doctor=request.user).order_by('-date', '-time')[:5]
+            pending_appointments = Appointment.objects.filter(status='P', doctor=request.user, date=date.today()).order_by('date', 'time')
+
+            context = {'completed_appointments': completed_appointments, 'pending_appointments': pending_appointments}
+
+            return render(request, 'doctor_home.html', context)
+
+        elif request.user.user_type == 'P':
+            return render(request, 'patient_home.html')
+
+    else:
+        return render(request, 'home.html')
 
 
 @login_required
