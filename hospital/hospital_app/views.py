@@ -109,7 +109,7 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
     # context_object_name = 'appointments_list'
-    paginate_by = 10
+    paginate_by = 5
     # queryset = Appointment.objects.filter(status='P')
 
     def get_context_data(self, **kwargs):
@@ -119,6 +119,7 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
         appointments_list = my_filter.qs
         context['my_filter'] = my_filter
         context['appointments_list'] = appointments_list
+
         return context
 
 
