@@ -12,7 +12,7 @@
                     <div class="col">
                         <div class="card card-body" >
 
-                            <form method="get"   style="margin: 0 10px">
+                            <form method="get"   style="margin: 0 20px">
                                 {{my_filter.form}}
 
                             <button class="btn btn-primary" type="submit">Search</button>
@@ -28,7 +28,9 @@
                 <thead>
                     <th>Date</th>
                     <th>Time</th>
+                {% if user.is_receptionist %}
                     <th>Doctor</th>
+                {% endif %}
                     <th>Patient</th>
                     <th>Status</th>
                     <th>Detail</th>
@@ -39,7 +41,9 @@
                 <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
                     <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
+                {% if user.is_receptionist %}
                     <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</a></td>
+                {% endif %}
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
                     <td>{{ app.status }}</td>
                     <td>

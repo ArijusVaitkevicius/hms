@@ -5,13 +5,11 @@
 <div class="row">
 	<div class="col-md-6">
 		<h5>LAST 5 COMPLETED APPOINTMENTS</h5>
-		<hr>
 		<div>
 			<table class="table table-sm table-hover">
 				<tr>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Doctor</th>
                     <th>Patient</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -20,7 +18,6 @@
                 <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
                    <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
-                    <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</a></td>
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
@@ -36,13 +33,11 @@
     </div>
 	<div class="col-md-6">
 		<h5>TODAY UPCOMING APPOINTMENTS</h5>
-		<hr>
 		<div>
 			<table class="table table-sm table-hover">
 				<tr>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Doctor</th>
                     <th>Patient</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -51,7 +46,6 @@
                 <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
                    <td>{{ app.date }}</td>
                     <td>{{ app.time }}</td>
-                    <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</a></td>
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
