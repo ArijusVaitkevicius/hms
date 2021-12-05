@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.generic.list import MultipleObjectMixin
-from .filters import AppointmentFilter
+from .filters import AppointmentFilter, PatientFilter, DoctorFilter
 
 User = get_user_model()
 
@@ -109,7 +109,7 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
     # context_object_name = 'appointments_list'
-    paginate_by = 5
+    # paginate_by = 5
     # queryset = Appointment.objects.filter(status='P')
 
     def get_context_data(self, **kwargs):
@@ -170,9 +170,19 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 class PatientsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'patients.html'
-    context_object_name = 'patients_list'
-    paginate_by = 10
-    queryset = User.objects.filter(user_type='P')
+    # context_object_name = 'patients_list'
+    # paginate_by = 10
+    # queryset = User.objects.filter(user_type='P')
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientsListView, self).get_context_data(**kwargs)
+        patients_list = User.objects.filter(user_type='P')
+        my_filter = PatientFilter(self.request.GET, queryset=patients_list)
+        patients_list = my_filter.qs
+        context['my_filter'] = my_filter
+        context['patients_list'] = patients_list
+
+        return context
 
 
 class PatientsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
@@ -209,9 +219,19 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
 class DoctorsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'doctors.html'
-    context_object_name = 'doctors_list'
-    paginate_by = 10
-    queryset = User.objects.filter(user_type='D')
+    # context_object_name = 'doctors_list'
+    # paginate_by = 10
+    # queryset = User.objects.filter(user_type='D')
+
+    def get_context_data(self, **kwargs):
+        context = super(DoctorsListView, self).get_context_data(**kwargs)
+        doctors_list = User.objects.filter(user_type='D')
+        my_filter = DoctorFilter(self.request.GET, queryset=doctors_list)
+        doctors_list = my_filter.qs
+        context['my_filter'] = my_filter
+        context['doctors_list'] = doctors_list
+
+        return context
 
 
 class DoctorsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
