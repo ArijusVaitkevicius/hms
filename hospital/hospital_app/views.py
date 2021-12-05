@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment, CustomUser, Profile, Prescription
 from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
-    PatientCustomUserChangeForm
+    PatientCustomUserChangeForm, PrescriptionForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -162,7 +162,7 @@ class PatientsListView(LoginRequiredMixin, ListView):
     queryset = User.objects.filter(user_type='P')
 
 
-class PatientsDetailView(LoginRequiredMixin, DetailView):
+class PatientsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     model = User
     template_name = 'patient.html'
     paginate_by = 5
@@ -230,3 +230,40 @@ class DoctorDeleteView(LoginRequiredMixin, DeleteView):
     model = CustomUser
     success_url = "/doctors"
     template_name = 'delete_doctor.html'
+
+
+class PrescriptionDetailView(LoginRequiredMixin, DetailView):
+    model = Prescription
+    template_name = 'prescription.html'
+
+
+# class PrescriptionCreateView(LoginRequiredMixin, CreateView):
+#     model = Prescription
+#     success_url = "/prescriptions"
+#     template_name = 'create_prescription.html'
+#     form_class = PrescriptionForm
+#
+#     def get_initial(self):
+#         initial = super(AppointmentCreateView, self).get_initial()
+#         initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
+#         initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
+#         AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
+#
+#         return initial
+
+
+class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
+    model = Prescription
+    template_name = 'update_prescription.html'
+    form_class = PrescriptionForm
+
+    def get_success_url(self):
+        return reverse('prescription', kwargs={'pk': self.object.id})
+
+    def get_initial(self):
+        new_pk = str(Prescription.objects.get(pk=self.kwargs['pk']).patient.pk)
+        initial = super(PrescriptionUpdateView, self).get_initial()
+        initial.update({'patient': User.objects.get(pk=new_pk)})
+        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+
+        return initial

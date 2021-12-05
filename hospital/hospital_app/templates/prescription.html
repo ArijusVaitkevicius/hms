@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'update_prescription' prescription.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update prescription</button></a>
+
+    <p><strong>Patient:</strong> <a href="{% url 'patient' prescription.patient.id %}">{{ prescription.patient.profile.name }} {{ prescription.patient.profile.surname }}</a></p>
+    <p><strong>Date:</strong> {{ prescription.date }}</p>
+    <p><strong>Doctor:</strong><a href="{% url 'doctor' prescription.doctor.id %}">{{ prescription.doctor.profile.name }}{{ prescription.doctor.profile.surname }}</a></p>
+    <p><strong>Symptoms:</strong> {{ prescription.symptoms }}</p>
+    <p><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
+
+{% endblock %}

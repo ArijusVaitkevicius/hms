@@ -20,4 +20,7 @@ urlpatterns = [
     path("doctors/add", views.DoctorCreateView.as_view(), name="add_doctor"),
     path("doctors/<int:pk>/update", views.doctor_profile, name='update_doctor'),
     path("doctors/<int:pk>/delete", views.DoctorDeleteView.as_view(), name='delete_doctor'),
+    path('prescriptions/<int:pk>', views.PrescriptionDetailView.as_view(), name='prescription'),
+    # path("appointments/<int:pk>/create", views.AppointmentCreateView.as_view(), name="create_appointment"),
+    path("prescriptions/<int:pk>/update", views.PrescriptionUpdateView.as_view(), name='update_prescription'),
 ]

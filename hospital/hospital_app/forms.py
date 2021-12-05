@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, Appointment, Profile
+from .models import CustomUser, Appointment, Profile, Prescription
 from django import forms
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
@@ -110,7 +110,7 @@ class AppointmentForm(forms.ModelForm):
 
     class Meta:
         model = Appointment
-        fields = ['date', 'time', 'status', 'patient', 'doctor']
+        fields = ['date', 'time', 'status', 'patient', 'doctor', 'complaint']
         widgets = {
             'date': DateInput(attrs={'type': 'date'}),
         }
@@ -118,6 +118,22 @@ class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields["time"] = forms.ChoiceField(choices=working_hours(self.timeslot))
+            self.fields['time'] = forms.ChoiceField(choices=working_hours(self.timeslot))
+            self.fields['patient'].widget.attrs['disabled'] = 'disabled'
+            self.fields['doctor'].widget.attrs['disabled'] = 'disabled'
+
+
+class PrescriptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Prescription
+        fields = ['patient', 'doctor', 'expiration', 'symptoms', 'diagnosis']
+        widgets = {
+            'expiration': DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(PrescriptionForm, self).__init__(*args, **kwargs)
+        if self.instance:
             self.fields['patient'].widget.attrs['disabled'] = 'disabled'
             self.fields['doctor'].widget.attrs['disabled'] = 'disabled'

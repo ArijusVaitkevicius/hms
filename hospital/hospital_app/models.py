@@ -163,6 +163,7 @@ class Appointment(models.Model):
     status = models.CharField(choices=APPOINTMENT_STATUS, max_length=1, default='P')
     patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='patient_appointment')
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointment')
+    complaint = models.TextField('Complaint', max_length=200, null=True, blank=True)
 
     @property
     def is_overdue(self):
@@ -198,6 +199,12 @@ class Prescription(models.Model):
     expiration = models.DateField('Expiration date', null=True, blank=True)
     symptoms = models.TextField('Symptoms', max_length=200)
     diagnosis = models.TextField('Diagnosis', max_length=1000)
+
+    @property
+    def is_overdue(self):
+        if date.today() > self.expiration:
+            return True
+        return False
 
     def __str__(self):
         return f'prescription id:{self.pk} for {self.patient}'
