@@ -15,7 +15,17 @@ User = get_user_model()
 
 
 def home(request):
-    return render(request, 'home.html')
+    appointments = Appointment.objects.all().order_by('-id')[:5]
+    patients = User.objects.all().filter(user_type='P').order_by('-id')[:3]
+    doctors = User.objects.all().filter(user_type='D').order_by('-id')[:3]
+
+    # total_appointments = appointments.count()
+    # pending = appointments.filter(status='P').count()
+    # completed = appointments.filter(status='C').count()
+
+    context = {'appointments': appointments, 'patients': patients, 'doctors': doctors}
+
+    return render(request, 'home.html', context)
 
 
 @login_required
