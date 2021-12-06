@@ -194,12 +194,11 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     form_class = AppointmentForm
 
     def get_initial(self):
-        new_pk = str(Appointment.objects.get(pk=self.kwargs['pk']).patient.pk)
         initial = super(AppointmentUpdateView, self).get_initial()
-        initial.update({'patient': User.objects.get(pk=new_pk)})
-        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+        initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
+        initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
 
-        AppointmentForm.timeslot = User.objects.get(pk=new_pk).my_doctor.profile.shift
+        AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
         AppointmentForm.timestamp = str(Appointment.objects.get(pk=self.kwargs['pk']).time)
 
         return initial
@@ -371,10 +370,9 @@ class PrescriptionCreateView(LoginRequiredMixin, CreateWithInlinesView):
         return reverse('prescription', kwargs={'pk': self.object.id})
 
     def get_initial(self):
-        new_pk = str(Prescription.objects.get(pk=self.kwargs['pk']).patient.pk)
         initial = super(PrescriptionCreateView, self).get_initial()
-        initial.update({'patient': User.objects.get(pk=new_pk)})
-        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+        initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
+        initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
 
         return initial
 
@@ -389,10 +387,9 @@ class PrescriptionUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
         return reverse('prescription', kwargs={'pk': self.object.id})
 
     def get_initial(self):
-        new_pk = str(Prescription.objects.get(pk=self.kwargs['pk']).patient.pk)
         initial = super(PrescriptionUpdateView, self).get_initial()
-        initial.update({'patient': User.objects.get(pk=new_pk)})
-        initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
+        initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
+        initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
 
         return initial
 
