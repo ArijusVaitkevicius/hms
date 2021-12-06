@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="container">
-    <h2>Update prescription</h2>
+    <h2>Appointment details</h2>
     <form method="POST">
         {% csrf_token %}
         {% bootstrap_form form %}
-        <input name='add' type="submit" value="Update" class="btn btn-primary">
+        <input name="add" type="submit" value="Create" class="btn btn-success">
     </form>
 </div>
 <script>

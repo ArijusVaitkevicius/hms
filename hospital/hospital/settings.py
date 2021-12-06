@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap3',
     'django_filters',
+    'extra_views',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Appointment, CustomUser, Profile, Prescription
+from .models import Appointment, CustomUser, Profile, Prescription, PrescriptionLine
 from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
     PatientCustomUserChangeForm, PrescriptionForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.views.generic.list import MultipleObjectMixin
 from .filters import AppointmentFilter, PatientFilter, DoctorFilter, MyAppointmentFilter
 from datetime import date
+from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
 
 User = get_user_model()
 
@@ -125,7 +126,7 @@ def patient_profile(request, pk):
 #     context = {
 #         'u_form': form,
 #     }
-#     return render(request, 'create_appointment.html', context)
+#     return render(request, 'appointment_form.html', context)
 
 
 class AppointmentsListView(LoginRequiredMixin, ListView):
@@ -172,7 +173,7 @@ class AppointmentsDetailView(LoginRequiredMixin, DetailView):
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
     success_url = "/appointments"
-    template_name = 'create_appointment.html'
+    template_name = 'appointment_form.html'
     form_class = AppointmentForm
 
     def get_initial(self):
@@ -187,7 +188,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
 class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Appointment
     success_url = "/appointments"
-    template_name = 'update_appointment.html'
+    template_name = 'appointment_form.html'
     form_class = AppointmentForm
 
     def get_initial(self):
@@ -306,14 +307,20 @@ class DoctorDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'delete_doctor.html'
 
 
+class PrescriptionInline(InlineFormSetFactory):
+    model = PrescriptionLine
+    fields = ['drugs', 'qty']
+
+
 class PrescriptionDetailView(LoginRequiredMixin, DetailView):
     model = Prescription
     template_name = 'prescription.html'
 
 
-class PrescriptionCreateView(LoginRequiredMixin, CreateView):
+class PrescriptionCreateView(LoginRequiredMixin, CreateWithInlinesView):
     model = Prescription
-    template_name = 'create_prescription.html'
+    inlines = [PrescriptionInline, ]
+    template_name = 'prescription_form.html'
     form_class = PrescriptionForm
 
     def get_success_url(self):
@@ -328,9 +335,10 @@ class PrescriptionCreateView(LoginRequiredMixin, CreateView):
         return initial
 
 
-class PrescriptionUpdateView(LoginRequiredMixin, UpdateView):
+class PrescriptionUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
     model = Prescription
-    template_name = 'update_prescription.html'
+    inlines = [PrescriptionInline, ]
+    template_name = 'prescription_form.html'
     form_class = PrescriptionForm
 
     def get_success_url(self):
