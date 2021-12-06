@@ -46,3 +46,11 @@ class DoctorFilter(django_filters.FilterSet):
     class Meta:
         model = CustomUser
         fields = ['email', 'name', 'surname']
+
+
+class DrugsFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(label='Drug name', field_name='name', lookup_expr='icontains')
+
+    class Meta:
+        model = Drug
+        fields = ['name']

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.edit import FormMixin
 
-from .forms import AppointmentForm, CustomUserCreationForm
+from .forms import AppointmentForm, CustomUserCreationForm, DrugForm
 from django.contrib.auth.decorators import login_required
-from .models import Appointment, CustomUser, Profile, Prescription, PrescriptionLine
+from .models import Appointment, CustomUser, Profile, Prescription, PrescriptionLine, Drug
 from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
     PatientCustomUserChangeForm, PrescriptionForm, PrescriptionLineForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.views.generic.list import MultipleObjectMixin
-from .filters import AppointmentFilter, PatientFilter, DoctorFilter, MyAppointmentFilter
+from .filters import AppointmentFilter, PatientFilter, DoctorFilter, MyAppointmentFilter, DrugsFilter
 from datetime import date
 from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
 
@@ -400,3 +400,38 @@ class PrescriptionLineDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('prescription', kwargs={'pk': PrescriptionLine.objects.get(pk=self.kwargs['pk']).prescription.pk})
+
+
+class DrugsListView(LoginRequiredMixin, ListView, FormMixin):
+    model = Drug
+    template_name = 'drugs.html'
+    form_class = DrugForm
+    success_url = "/drugs"
+
+    def get_context_data(self, **kwargs):
+        context = super(DrugsListView, self).get_context_data(**kwargs)
+        drugs_list = Drug.objects.all()
+        my_filter = DrugsFilter(self.request.GET, queryset=drugs_list)
+        drugs_list = my_filter.qs
+        context['form'] = DrugForm
+        context['my_filter'] = my_filter
+        context['drugs_list'] = drugs_list
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(DrugsListView, self).form_valid(form)
+
+
+class DrugDeleteView(LoginRequiredMixin, DeleteView):
+    model = Drug
+    template_name = 'delete_drug.html'
+    success_url = "/drugs"

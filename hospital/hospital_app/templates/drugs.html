@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap3 %}
+
+{% block content %}
+<br>
+<div class="col-md-12">
+    <div class="fieldWrapper">
+        <form action="" method="post">
+            {% csrf_token %}
+            <h3>Add new drug:</h3>
+            {{ form.name }}
+            <button class="btn btn-success" type="submit">Add</button>
+        </form>
+    </div>
+    <div>
+        <div>
+            <h3>Drugs:</h3>
+            <br>
+                <div class="row">
+                    <div class="col">
+                        <div class="card card-body">
+
+                            <form method="get">
+                                {{ my_filter.form }}
+
+                            <button class="btn btn-primary" type="submit">Search</button>
+                          </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            <br>
+            {% if drugs_list %}
+            <table class="table table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </thead>
+                {% for drug in drugs_list %}
+                <tr>
+                    <td>{{ drug.name }}</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="">Update</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_drug' drug.id %}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+              <p>There are no drugs.</p>
+            {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

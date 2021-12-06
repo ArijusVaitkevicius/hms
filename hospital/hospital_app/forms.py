@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
-from .models import CustomUser, Appointment, Profile, Prescription, PrescriptionLine
+from .models import CustomUser, Appointment, Profile, Prescription, PrescriptionLine, Drug
 from django import forms
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
@@ -147,3 +147,9 @@ class PrescriptionLineForm(forms.ModelForm):
         model = PrescriptionLine
         fields = ['prescription', 'drugs', 'qty']
         widgets = {'prescription': forms.HiddenInput()}
+
+
+class DrugForm(forms.ModelForm):
+    class Meta:
+        model = Drug
+        fields = ['name']

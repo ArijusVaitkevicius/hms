@@ -220,7 +220,7 @@ class PrescriptionLine(models.Model):
                                      on_delete=models.SET_NULL,
                                      null=True,
                                      related_name='prescription_line')
-    drugs = models.ForeignKey(Drug, on_delete=models.SET_NULL, null=True, related_name='drug_line')
+    drugs = models.ForeignKey(Drug, on_delete=models.CASCADE, null=True, related_name='drug_line')
     qty = models.IntegerField('Quantity')
 
     def __str__(self):
