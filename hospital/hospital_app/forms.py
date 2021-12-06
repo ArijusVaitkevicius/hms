@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, ReadOnlyPasswordHashField
-from .models import CustomUser, Appointment, Profile, Prescription
+from .models import CustomUser, Appointment, Profile, Prescription, PrescriptionLine
 from django import forms
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
@@ -140,3 +140,10 @@ class PrescriptionForm(forms.ModelForm):
         if self.instance:
             self.fields['patient'].widget.attrs['disabled'] = 'disabled'
             self.fields['doctor'].widget.attrs['disabled'] = 'disabled'
+
+
+class PrescriptionLineForm(forms.ModelForm):
+    class Meta:
+        model = PrescriptionLine
+        fields = ['prescription', 'drugs', 'qty']
+        widgets = {'prescription': forms.HiddenInput()}

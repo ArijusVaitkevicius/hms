@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, reverse
+from django.views.generic.edit import FormMixin
+
 from .forms import AppointmentForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment, CustomUser, Profile, Prescription, PrescriptionLine
 from .forms import CustomUserChangeForm, ProfileUpdateForm, DoctorProfileUpdateForm, PatientProfileUpdateForm, \
-    PatientCustomUserChangeForm, PrescriptionForm
+    PatientCustomUserChangeForm, PrescriptionForm, PrescriptionLineForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -227,13 +229,31 @@ class PatientsListView(LoginRequiredMixin, ListView):
         return context
 
 
+class MyPatientsListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'patients.html'
+    # context_object_name = 'appointments_list'
+    # paginate_by = 5
+    # queryset = Appointment.objects.filter(status='P')
+
+    def get_context_data(self, **kwargs):
+        context = super(MyPatientsListView, self).get_context_data(**kwargs)
+        patients_list = User.objects.filter(user_type='P', my_doctor=self.request.user)
+        my_filter = PatientFilter(self.request.GET, queryset=patients_list)
+        patients_list = my_filter.qs
+        context['my_filter'] = my_filter
+        context['patients_list'] = patients_list
+
+        return context
+
+
 class PatientsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     model = User
     template_name = 'patient.html'
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
-        object_list = Prescription.objects.filter(patient=self.get_object())
+        object_list = Prescription.objects.filter(patient=self.get_object()).order_by('-expiration',)
         context = super(PatientsDetailView, self).get_context_data(object_list=object_list, **kwargs)
 
         return context
@@ -312,9 +332,33 @@ class PrescriptionInline(InlineFormSetFactory):
     fields = ['drugs', 'qty']
 
 
-class PrescriptionDetailView(LoginRequiredMixin, DetailView):
+class PrescriptionDetailView(FormMixin, LoginRequiredMixin, DetailView):
     model = Prescription
     template_name = 'prescription.html'
+    form_class = PrescriptionLineForm
+
+    def get_success_url(self):
+        return reverse('prescription', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        object_list = PrescriptionLine.objects.filter(prescription=self.get_object())
+        context = super(PrescriptionDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        context['form'] = PrescriptionLineForm(initial={'prescription': self.object})
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.prescription = self.object
+        form.save()
+        return super(PrescriptionDetailView, self).form_valid(form)
 
 
 class PrescriptionCreateView(LoginRequiredMixin, CreateWithInlinesView):
@@ -351,3 +395,11 @@ class PrescriptionUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
         initial.update({'doctor': User.objects.get(pk=new_pk).my_doctor})
 
         return initial
+
+
+class PrescriptionLineDeleteView(LoginRequiredMixin, DeleteView):
+    model = PrescriptionLine
+    template_name = 'delete_prescription_line.html'
+
+    def get_success_url(self):
+        return reverse('prescription', kwargs={'pk': PrescriptionLine.objects.get(pk=self.kwargs['pk']).prescription.pk})

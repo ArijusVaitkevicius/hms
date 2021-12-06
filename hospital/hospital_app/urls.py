@@ -12,6 +12,7 @@ urlpatterns = [
     path("appointments/<int:pk>/update", views.AppointmentUpdateView.as_view(), name='update_appointment'),
     path("appointments/<int:pk>/delete", views.AppointmentDeleteView.as_view(), name='delete_appointment'),
     path("patients", views.PatientsListView.as_view(), name="patients"),
+    path("my_patients", views.MyPatientsListView.as_view(), name="my_patients"),
     path('patients/<int:pk>', views.PatientsDetailView.as_view(), name='patient'),
     path("patients/add", views.PatientCreateView.as_view(), name="add_patient"),
     path("patients/<int:pk>/update", views.patient_profile, name='update_patient'),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('prescriptions/<int:pk>', views.PrescriptionDetailView.as_view(), name='prescription'),
     path("prescriptions/<int:pk>/create", views.PrescriptionCreateView.as_view(), name="create_prescription"),
     path("prescriptions/<int:pk>/update", views.PrescriptionUpdateView.as_view(), name='update_prescription'),
+    path("prescription_line/<int:pk>/delete", views.PrescriptionLineDeleteView.as_view(), name='delete_prescription_line'),
 ]

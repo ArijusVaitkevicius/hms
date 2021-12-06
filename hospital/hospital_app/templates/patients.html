@@ -30,7 +30,8 @@
                     <th>Name</th>
                     <th>Surname</th>
                     <th>Email</th>
-                    <th>Appointment</th>
+                    {% if user.is_receptionist %}<th>Appointment</th>{% endif %}
+                    {% if user.is_doctor %}<th>Prescription</th>{% endif %}
                     <th>Update</th>
                     <th>Delete</th>
                 </thead>
@@ -39,9 +40,16 @@
                     <td>{{ pat.profile.name }}</td>
                     <td>{{ pat.profile.surname }}</td>
                     <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
+                    {% if user.is_receptionist %}
                     <td>
                         <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
                     </td>
+                    {% endif %}
+                    {% if user.is_doctor %}
+                    <td>
+                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_prescription' pat.id %}">Create prescription</a>
+                    </td>
+                    {% endif %}
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
                     </td>
