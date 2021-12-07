@@ -2,13 +2,13 @@
 {% block content %}
 <br>
 <hr>
-<h3><strong>My doctor: </strong>
+<h4><strong>My doctor: </strong>
     {{ user.my_doctor.profile.name }}
     {{ user.my_doctor.profile.surname }}
     {{ user.my_doctor.profile.phone }}
     {{ user.my_doctor.email }}
     <a href="{% url 'create_appointment' user.id %}"><button class="btn btn-success" style="margin: 20px 0">Create appointment</button></a>
-</h3>
+</h4>
 <hr>
 <div class="row">
 	<div class="col-md-6">

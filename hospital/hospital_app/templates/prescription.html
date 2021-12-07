@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br>
+<div class="col-md-12 card">
     {% if user.is_doctor %}
     <a href="{% url 'update_prescription' prescription.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update prescription</button></a>
 <br>
@@ -18,8 +20,8 @@
     <p><strong>Symptoms:</strong> {{ prescription.symptoms }}</p>
     <p><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
 </div>
-<hr>
-    <div style="margin-left:20px;margin-top:20px">
+<br>
+    <div style="margin-top:50px">
         <h4>Prescription lines:</h4>
         {% if object_list %}
             <table class="table table-hover">
@@ -67,4 +69,5 @@
         </div>
         {% endif %}
     </div>
+</div>
 {% endblock %}

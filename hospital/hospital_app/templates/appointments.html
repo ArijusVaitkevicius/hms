@@ -6,9 +6,10 @@
 <div class="col-md-12">
     <div>
         <div>
-            {% if user.is_receptionist or user.is_doctor %}
+            <br>
             <h3>Appointments:</h3>
             <br>
+            {% if user.is_receptionist or user.is_doctor %}
                 <div class="row">
                     <div class="col">
                         <div class="card card-body" >

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br>
   {% if user.is_doctor or user.is_receptionist %}
   <a href="{% url 'update_appointment' appointment.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update appointment</button></a>
   <a href="{% url 'delete_appointment' appointment.id %}"><button class="btn btn-danger" style="margin: 20px 0">Delete appointment</button></a>
