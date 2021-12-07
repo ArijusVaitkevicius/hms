@@ -64,6 +64,7 @@ class PatientProfileUpdateForm(forms.ModelForm):
 
 class AppointmentForm(forms.ModelForm):
     time_choices = [('select_time', 'select_time')]
+    timestamp = ''
     doc = ''
 
     class Meta:
@@ -77,7 +78,7 @@ class AppointmentForm(forms.ModelForm):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['time'] = forms.ChoiceField(choices=self.time_choices)
-            # self.initial['time'] = self.timestamp[:5]
+            self.initial['time'] = self.timestamp[:5]
             self.fields['patient'].widget.attrs['disabled'] = 'disabled'
             self.fields['doctor'].widget.attrs['disabled'] = 'disabled'
 

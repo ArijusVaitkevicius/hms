@@ -32,10 +32,20 @@ selectDate.addEventListener('change', function () {
     $.post('/filter_times', {date: selectDate.value, doctor: doctor.value, csrfmiddlewaretoken: token}, function (data) {
         times = data;
 
+        dateSelect = document.getElementById("id_time");
+         if(dateSelect.hasChildNodes()){
+              dateSelect.innerHTML = '';
+            }
+            var option = document.createElement("option");
+            dateSelect.appendChild(option);
+
         for (const [key, value] of Object.entries(times)) {
-            document.getElementById("id_time").getElementsByTagName( 'option' )[0].insertAdjacentHTML("afterend",
+
+            dateSelect.getElementsByTagName("option")[0].insertAdjacentHTML("afterend",
                 '<option value='+ key +'>'+ key +'</option>');
+
         };
+        dateSelect[0].parentNode.removeChild(dateSelect[0]);
 });
 });
 
