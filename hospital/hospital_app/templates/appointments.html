@@ -6,6 +6,7 @@
 <div class="col-md-12">
     <div>
         <div>
+            {% if user.is_receptionist or user.is_doctor %}
             <h3>Appointments:</h3>
             <br>
                 <div class="row">
@@ -23,19 +24,24 @@
 
                 </div>
             <br>
+            {% endif %}
             {% if appointments_list %}
             <table class="table table-hover">
                 <thead>
                     <th>Date</th>
                     <th>Time</th>
-                {% if user.is_receptionist %}
+                {% if user.is_receptionist or user.is_patient %}
                     <th>Doctor</th>
                 {% endif %}
+                {% if user.is_receptionist or user.is_doctor %}
                     <th>Patient</th>
+                {% endif %}
                     <th>Status</th>
                     <th>Detail</th>
+                {% if user.is_receptionist or user.is_doctor %}
                     <th>Update</th>
                     <th>Delete</th>
+                {% endif %}
                 </thead>
                 {% for app in appointments_list %}
                 <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
@@ -44,18 +50,24 @@
                 {% if user.is_receptionist %}
                     <td><a href="{% url 'doctor' app.doctor.id %}">{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</a></td>
                 {% endif %}
+                {% if user.is_patient %}
+                    <td>{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</td>
+                {% endif %}
+                {% if user.is_receptionist or user.is_doctor %}
                     <td><a href="{% url 'patient' app.patient.id %}">{{ app.patient.profile.name }} {{ app.patient.profile.surname }}</a></td>
+                {% endif %}
                     <td>{{ app.status }}</td>
                     <td>
                         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'appointment' app.id %}">Details</a>
                     </td>
+                    {% if user.is_receptionist or user.is_doctor %}
                     <td>
                         <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_appointment' app.id %}">Update</a>
                     </td>
                     <td>
                         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_appointment' app.id %}">Delete</a>
                     </td>
-
+                    {% endif %}
                 </tr>
                 {% endfor %}
             {% else %}

@@ -43,7 +43,14 @@ def home(request):
             return render(request, 'doctor_home.html', context)
 
         elif request.user.user_type == 'P':
-            return render(request, 'patient_home.html')
+            pending_prescriptions = Prescription.objects.filter(patient=request.user,
+                                                                expiration__gte=date.today()).order_by('-date')
+
+            pending_appointments = Appointment.objects.filter(status='P', patient=request.user,
+                                                              date__gte=date.today()).order_by('date', 'time')
+            context = {'pending_prescriptions': pending_prescriptions, 'pending_appointments': pending_appointments}
+
+            return render(request, 'patient_home.html', context)
 
     else:
         return render(request, 'home.html')
@@ -148,6 +155,17 @@ class MyAppointmentsListView(LoginRequiredMixin, ListView):
         return context
 
 
+class PatientAppointmentsListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    template_name = 'appointments.html'
+
+    def get_context_data(self, **kwargs):
+        appointments_list = Appointment.objects.filter(patient=self.request.user).order_by('-date', '-time')
+        context = super(PatientAppointmentsListView, self).get_context_data(appointments_list=appointments_list, ** kwargs)
+
+        return context
+
+
 class AppointmentsDetailView(LoginRequiredMixin, DetailView):
     model = Appointment
     template_name = 'appointment.html'
@@ -212,7 +230,8 @@ def filter_times(request):
     if request.method == "POST":
         times = {}
 
-        picked_time_dict = Appointment.objects.filter(doctor=User.objects.get(pk=request.POST['doctor']), date=request.POST['date']).values('time')
+        picked_time_dict = Appointment.objects.filter(doctor=User.objects.get(pk=request.POST['doctor']),
+                                                      date=request.POST['date']).values('time')
 
         picked_times = []
 
@@ -232,9 +251,11 @@ def filter_times(request):
 
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
-    success_url = "/appointments"
     template_name = 'appointment_form.html'
     form_class = AppointmentForm
+
+    def get_success_url(self):
+        return reverse('appointment', kwargs={'pk': self.object.id})
 
     def get_initial(self):
         initial = super(AppointmentCreateView, self).get_initial()
@@ -246,9 +267,11 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
 
 class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     model = Appointment
-    success_url = "/appointments"
     template_name = 'appointment_form.html'
     form_class = AppointmentForm
+
+    def get_success_url(self):
+        return reverse('appointment', kwargs={'pk': self.object.id})
 
     def get_initial(self):
         user_pk = Appointment.objects.get(pk=self.kwargs['pk']).patient.id
@@ -328,10 +351,21 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'delete_patient.html'
 
 
+class MyPrescriptionsListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'my_prescriptions.html'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        object_list = Prescription.objects.filter(patient=self.request.user).order_by('-expiration', )
+        context = super(MyPrescriptionsListView, self).get_context_data(object_list=object_list, **kwargs)
+
+        return context
+
+
 class DoctorsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'doctors.html'
-
 
     def get_context_data(self, **kwargs):
         context = super(DoctorsListView, self).get_context_data(**kwargs)

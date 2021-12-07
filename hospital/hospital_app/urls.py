@@ -18,6 +18,7 @@ urlpatterns = [
     path("patients/add", views.PatientCreateView.as_view(), name="add_patient"),
     path("patients/<int:pk>/update", views.patient_profile, name='update_patient'),
     path("patients/<int:pk>/delete", views.PatientDeleteView.as_view(), name='delete_patient'),
+    path("patient_appointments", views.PatientAppointmentsListView.as_view(), name="patient_appointments"),
     path("doctors", views.DoctorsListView.as_view(), name="doctors"),
     path('doctors/<int:pk>', views.DoctorsDetailView.as_view(), name='doctor'),
     path("doctors/add", views.DoctorCreateView.as_view(), name="add_doctor"),
@@ -27,8 +28,7 @@ urlpatterns = [
     path("prescriptions/<int:pk>/create", views.PrescriptionCreateView.as_view(), name="create_prescription"),
     path("prescriptions/<int:pk>/update", views.PrescriptionUpdateView.as_view(), name='update_prescription'),
     path("prescription_line/<int:pk>/delete", views.PrescriptionLineDeleteView.as_view(), name='delete_prescription_line'),
+    path("my_prescriptions", views.MyPrescriptionsListView.as_view(), name="my_prescriptions"),
     path("drugs", views.DrugsListView.as_view(), name="drugs"),
-
-
     path("drugs/<int:pk>/delete", views.DrugDeleteView.as_view(), name='delete_drug'),
 ]
