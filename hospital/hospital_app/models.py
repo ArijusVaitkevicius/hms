@@ -5,8 +5,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from PIL import Image
 from django.core.validators import RegexValidator
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 import pytz
 
 utc = pytz.UTC
@@ -229,5 +228,3 @@ class PrescriptionLine(models.Model):
     class Meta:
         verbose_name = 'Prescription line'
         verbose_name_plural = 'Prescription lines'
-
-

@@ -1,4 +1,3 @@
-import simplejson as simplejson
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.edit import FormMixin
@@ -27,7 +26,6 @@ def home(request):
             appointments = Appointment.objects.all().order_by('-id')[:5]
             patients = User.objects.all().filter(user_type='P').order_by('-id')[:3]
             doctors = User.objects.all().filter(user_type='D').order_by('-id')[:3]
-
             context = {'appointments': appointments, 'patients': patients, 'doctors': doctors}
 
             return render(request, 'receptionist_home.html', context)
@@ -37,7 +35,6 @@ def home(request):
                                                                                                           '-time')[:5]
             pending_appointments = Appointment.objects.filter(status='P', doctor=request.user,
                                                               date=date.today()).order_by('date', 'time')
-
             context = {'completed_appointments': completed_appointments, 'pending_appointments': pending_appointments}
 
             return render(request, 'doctor_home.html', context)
@@ -45,7 +42,6 @@ def home(request):
         elif request.user.user_type == 'P':
             pending_prescriptions = Prescription.objects.filter(patient=request.user,
                                                                 expiration__gte=date.today()).order_by('-date')
-
             pending_appointments = Appointment.objects.filter(status='P', patient=request.user,
                                                               date__gte=date.today()).order_by('date', 'time')
             context = {'pending_prescriptions': pending_prescriptions, 'pending_appointments': pending_appointments}
@@ -103,7 +99,6 @@ def doctor_profile(request, pk):
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        # 'user': user,
     }
     return render(request, 'update_profile.html', context)
 
@@ -127,7 +122,6 @@ def patient_profile(request, pk):
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        # 'user': user,
     }
     return render(request, 'update_profile.html', context)
 
@@ -168,8 +162,8 @@ class PatientAppointmentsListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         appointments_list = Appointment.objects.filter(patient=self.request.user).order_by('-date', '-time')
-        context = super(PatientAppointmentsListView, self).get_context_data(appointments_list=appointments_list, ** kwargs)
-
+        context = super(PatientAppointmentsListView, self).get_context_data(appointments_list=appointments_list,
+                                                                            **kwargs)
         return context
 
 
@@ -200,7 +194,6 @@ def working_hours(timeslot, picked):
 
     start = datetime.strptime(st, '%H:%M')
     end = datetime.strptime(en, '%H:%M')
-
     seq = [start]
 
     while seq[-1] < end:
@@ -214,7 +207,6 @@ def working_hours(timeslot, picked):
         time.append(corrected[-5:])
 
     choices = []
-
     new_picked = []
 
     for new in picked:
@@ -236,17 +228,14 @@ def working_hours(timeslot, picked):
 def filter_times(request):
     if request.method == "POST":
         times = {}
-
         picked_time_dict = Appointment.objects.filter(doctor=User.objects.get(pk=request.POST['doctor']),
                                                       date=request.POST['date']).values('time')
-
         picked_times = []
 
         for dct in picked_time_dict:
             picked_times.append(dct.get('time').strftime("%H:%M"))
 
         timeslot = User.objects.get(pk=request.POST['doctor']).profile.shift
-
         filtered_times = working_hours(timeslot, picked_times)
         filtered_times.reverse()
 
@@ -285,7 +274,6 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
         initial = super(AppointmentUpdateView, self).get_initial()
         initial.update({'patient': User.objects.get(pk=user_pk)})
         initial.update({'doctor': User.objects.get(pk=user_pk).my_doctor})
-
         AppointmentForm.timestamp = str(Appointment.objects.get(pk=self.kwargs['pk']).time)
 
         return initial
