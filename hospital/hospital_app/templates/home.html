@@ -4,8 +4,13 @@
 
 {% block content %}
 <br>
+{% if not text_for_admin %}
 <h1>Welcome to the hospital management system!</h1>
 <h3>Please login</h3>
+{% endif %}
+{% if text_for_admin %}
+<h3 style="color:red"><strong>{{ text_for_admin }} <a href="{% url 'admin:index' %}">admin site</a></strong></h3>
+{% endif %}
 <br>
 <style>
     * {box-sizing: border-box;}

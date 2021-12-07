@@ -52,7 +52,14 @@ def home(request):
 
             return render(request, 'patient_home.html', context)
 
+        else:
+            text_for_admin = 'You logged in as admin, please go to admin page:'
+            context = {'text_for_admin': text_for_admin}
+
+            return render(request, 'home.html', context)
+
     else:
+
         return render(request, 'home.html')
 
 
