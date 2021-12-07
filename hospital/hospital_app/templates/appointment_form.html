@@ -30,7 +30,6 @@ selectDate.addEventListener('change', function () {
     const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 
     $.post('/filter_times', {date: selectDate.value, doctor: doctor.value, csrfmiddlewaretoken: token}, function (data) {
-        alert(data);
         times = data;
 
         for (const [key, value] of Object.entries(times)) {

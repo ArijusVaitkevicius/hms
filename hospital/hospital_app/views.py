@@ -195,9 +195,12 @@ def working_hours(timeslot, picked):
     for new in picked:
         new_picked.append(str(new))
 
+    choices_for_forms = []
+    AppointmentForm.time_choices = choices_for_forms
+
     for t in time:
         if t not in picked:
-            # one_tuple = (t, t)
+            choices_for_forms.append((t, t))
             choices.append(t)
         else:
             continue
@@ -248,11 +251,11 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     form_class = AppointmentForm
 
     def get_initial(self):
+        user_pk = Appointment.objects.get(pk=self.kwargs['pk']).patient.id
         initial = super(AppointmentUpdateView, self).get_initial()
-        initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
-        initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
+        initial.update({'patient': User.objects.get(pk=user_pk)})
+        initial.update({'doctor': User.objects.get(pk=user_pk).my_doctor})
 
-        AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
         AppointmentForm.timestamp = str(Appointment.objects.get(pk=self.kwargs['pk']).time)
 
         return initial
