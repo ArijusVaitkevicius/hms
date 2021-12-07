@@ -12,14 +12,6 @@
         <input name='add' type="submit" value="Add" class="btn btn-success">
     </form>
 </div>
-<script>
-var addButton = document.getElementsByName("add")[0];
-var userType = document.getElementsByName("user_type")[0];
 
-addButton.addEventListener("click", function () {
-   $(userType).removeAttr('disabled');
-});
-
-</script>
 {% endblock %}
 

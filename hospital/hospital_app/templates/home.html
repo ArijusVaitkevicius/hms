@@ -6,7 +6,7 @@
 <br>
 {% if not text_for_admin %}
 <h1>Welcome to the hospital management system!</h1>
-<h3>Please login</h3>
+<h3><a href="{% url 'login' %}">Please login</a></h3>
 {% endif %}
 {% if text_for_admin %}
 <h3 style="color:red"><strong>{{ text_for_admin }} <a href="{% url 'admin:index' %}">admin site</a></strong></h3>
