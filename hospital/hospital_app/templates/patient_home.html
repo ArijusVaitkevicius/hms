@@ -3,55 +3,55 @@
 <br>
 <hr>
 <h4><strong>My doctor: </strong>
-    {{ user.my_doctor.profile.name }}
-    {{ user.my_doctor.profile.surname }}
-    {{ user.my_doctor.profile.phone }}
-    {{ user.my_doctor.email }}
-    <a href="{% url 'create_appointment' user.id %}"><button class="btn btn-success" style="margin: 20px 0">Create appointment</button></a>
+   {{ user.my_doctor.profile.name }}
+   {{ user.my_doctor.profile.surname }}
+   {{ user.my_doctor.profile.phone }}
+   {{ user.my_doctor.email }}
+   <a href="{% url 'create_appointment' user.id %}"><button class="btn btn-success" style="margin: 20px 0">Create appointment</button></a>
 </h4>
 <hr>
 <div class="row">
-	<div class="col-md-6">
-		<h5>NOT EXPIRED PRESCRIPTIONS</h5>
-		<div>
-			<table class="table table-sm table-hover">
-				<tr>
-                    <th>Date</th>
-                    <th>Doctor</th>
-                    <th>Expiration</th>
-                    <th>Detail</th>
-				</tr>
-				{% for pre in pending_prescriptions %}
-                <tr class="{% if pre.is_overdue %}table-light{% else %}table-success{% endif %}">
-                    <td>{{ pre.date }}</td>
-                    <td>{{ pre.doctor.profile.name }}{{ pre.doctor.profile.surname }}</td>
-                    <td>{{ pre.expiration }}</td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
-                    </td>
-                </tr>
-				{% endfor %}
-			</table>
-		</div>
-    </div>
-	<div class="col-md-6">
-		<h5>UPCOMING APPOINTMENTS</h5>
-		<div>
-			<table class="table table-sm table-hover">
-				<tr>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Doctor</th>
-				</tr>
-				{% for app in pending_appointments %}
-                <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
-                   <td>{{ app.date }}</td>
-                    <td>{{ app.time }}</td>
-                    <td>{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</td>
-                </tr>
-				{% endfor %}
-			</table>
-		</div>
-	</div>
+   <div class="col-md-6">
+      <h5>NOT EXPIRED PRESCRIPTIONS</h5>
+      <div>
+         <table class="table table-sm table-hover">
+            <tr>
+               <th>Date</th>
+               <th>Doctor</th>
+               <th>Expiration</th>
+               <th>Detail</th>
+            </tr>
+            {% for pre in pending_prescriptions %}
+            <tr class="{% if pre.is_overdue %}table-light{% else %}table-success{% endif %}">
+               <td>{{ pre.date }}</td>
+               <td>{{ pre.doctor.profile.name }}{{ pre.doctor.profile.surname }}</td>
+               <td>{{ pre.expiration }}</td>
+               <td>
+                  <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
+               </td>
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+   </div>
+   <div class="col-md-6">
+      <h5>UPCOMING APPOINTMENTS</h5>
+      <div>
+         <table class="table table-sm table-hover">
+            <tr>
+               <th>Date</th>
+               <th>Time</th>
+               <th>Doctor</th>
+            </tr>
+            {% for app in pending_appointments %}
+            <tr class="{% if app.status == 'C' %}table-success{% elif app.is_overdue %}table-danger{% elif app.status == 'P'%}table-warning{% else %}table-light{% endif %}">
+               <td>{{ app.date }}</td>
+               <td>{{ app.time }}</td>
+               <td>{{ app.doctor.profile.name }} {{ app.doctor.profile.surname }}</td>
+            </tr>
+            {% endfor %}
+         </table>
+      </div>
+   </div>
 </div>
 {% endblock %}

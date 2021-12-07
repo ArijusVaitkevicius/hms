@@ -1,68 +1,67 @@
 {% extends "base.html" %}
 {% load static %}
 {% load bootstrap3 %}
-
 {% block content %}
 <div class="col-md-12">
-    <a href="{% url 'add_patient' %}"><button class="btn btn-success" style="margin: 20px 0">Add Patient</button></a>
-    <div>
-        <div>
-            <h3>Patients:</h3>
-            <br>
-                <div class="row">
-                    <div class="col">
-                        <div class="card card-body">
-
-                            <form method="get">
-                                {{ my_filter.form }}
-
-                            <button class="btn btn-primary" type="submit">Search</button>
-                          </form>
-
-                        </div>
-                    </div>
-
-                </div>
-            <br>
-            {% if patients_list %}
-            <table class="table table-striped">
-                <thead>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    {% if user.is_receptionist %}<th>Appointment</th>{% endif %}
-                    {% if user.is_doctor %}<th>Prescription</th>{% endif %}
-                    <th>Update</th>
-                    <th>Delete</th>
-                </thead>
-                {% for pat in patients_list %}
-                <tr>
-                    <td>{{ pat.profile.name }}</td>
-                    <td>{{ pat.profile.surname }}</td>
-                    <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
-                    {% if user.is_receptionist %}
-                    <td>
-                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
-                    </td>
-                    {% endif %}
-                    {% if user.is_doctor %}
-                    <td>
-                        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_prescription' pat.id %}">Create prescription</a>
-                    </td>
-                    {% endif %}
-                    <td>
-                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_patient' pat.id %}">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
+   <a href="{% url 'add_patient' %}"><button class="btn btn-success" style="margin: 20px 0">Add Patient</button></a>
+   <div>
+      <div>
+         <h3>Patients:</h3>
+         <br>
+         <div class="row">
+            <div class="col">
+               <div class="card card-body">
+                  <form method="get">
+                     {{ my_filter.form }}
+                     <button class="btn btn-primary" type="submit">Search</button>
+                  </form>
+               </div>
+            </div>
+         </div>
+         <br>
+         {% if patients_list %}
+         <table class="table table-striped">
+            <thead>
+               <th>Name</th>
+               <th>Surname</th>
+               <th>Email</th>
+               {% if user.is_receptionist %}
+               <th>Appointment</th>
+               {% endif %}
+               {% if user.is_doctor %}
+               <th>Prescription</th>
+               {% endif %}
+               <th>Update</th>
+               <th>Delete</th>
+            </thead>
+            {% for pat in patients_list %}
+            <tr>
+               <td>{{ pat.profile.name }}</td>
+               <td>{{ pat.profile.surname }}</td>
+               <td><a href="{% url 'patient' pat.id %}">{{ pat.email }}</a></td>
+               {% if user.is_receptionist %}
+               <td>
+                  <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_appointment' pat.id %}">Create appointment</a>
+               </td>
+               {% endif %}
+               {% if user.is_doctor %}
+               <td>
+                  <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'create_prescription' pat.id %}">Create prescription</a>
+               </td>
+               {% endif %}
+               <td>
+                  <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_patient' pat.id %}">Update</a>
+               </td>
+               <td>
+                  <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_patient' pat.id %}">Delete</a>
+               </td>
+            </tr>
+            {% endfor %}
             {% else %}
-              <p>There are no patients.</p>
+            <p>There are no patients.</p>
             {% endif %}
-            </table>
-        </div>
-    </div>
+         </table>
+      </div>
+   </div>
 </div>
 {% endblock %}

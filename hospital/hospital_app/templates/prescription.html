@@ -1,73 +1,72 @@
 {% extends "base.html" %}
-
 {% block content %}
 <br>
 <div class="col-md-12 card">
-    {% if user.is_doctor %}
-    <a href="{% url 'update_prescription' prescription.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update prescription</button></a>
-<br>
-<div>
-    <p><strong>Patient:</strong> <a href="{% url 'patient' prescription.patient.id %}">{{ prescription.patient.profile.name }} {{ prescription.patient.profile.surname }}</a></p>
-    {% endif %}
-    <p><strong>Date:</strong> {{ prescription.date }}</p>
-    <p><strong>Expiration:</strong> {{ prescription.expiration }}</p>
-    {% if user.is_doctor or user.is_prescription %}
-    <p><strong>Doctor:</strong><a href="{% url 'doctor' prescription.doctor.id %}">{{ prescription.doctor.profile.name }}{{ prescription.doctor.profile.surname }}</a></p>
-    {% endif %}
-    {% if user.is_patient %}
-    <p><strong>Doctor:</strong>{{ prescription.doctor.profile.name }}{{ prescription.doctor.profile.surname }}</p>
-    {% endif %}
-    <p><strong>Symptoms:</strong> {{ prescription.symptoms }}</p>
-    <p><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
-</div>
-<br>
-    <div style="margin-top:50px">
-        <h4>Prescription lines:</h4>
-        {% if object_list %}
+   {% if user.is_doctor %}
+   <a href="{% url 'update_prescription' prescription.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update prescription</button></a>
+   <br>
+   <div>
+      <p><strong>Patient:</strong> <a href="{% url 'patient' prescription.patient.id %}">{{ prescription.patient.profile.name }} {{ prescription.patient.profile.surname }}</a></p>
+      {% endif %}
+      <p><strong>Date:</strong> {{ prescription.date }}</p>
+      <p><strong>Expiration:</strong> {{ prescription.expiration }}</p>
+      {% if user.is_doctor or user.is_prescription %}
+      <p><strong>Doctor:</strong><a href="{% url 'doctor' prescription.doctor.id %}">{{ prescription.doctor.profile.name }}{{ prescription.doctor.profile.surname }}</a></p>
+      {% endif %}
+      {% if user.is_patient %}
+      <p><strong>Doctor:</strong>{{ prescription.doctor.profile.name }}{{ prescription.doctor.profile.surname }}</p>
+      {% endif %}
+      <p><strong>Symptoms:</strong> {{ prescription.symptoms }}</p>
+      <p><strong>Diagnosis:</strong> {{ prescription.diagnosis }}</p>
+   </div>
+   <br>
+   <div style="margin-top:50px">
+      <h4>Prescription lines:</h4>
+      {% if object_list %}
+      <table class="table table-hover">
+         <thead>
+            <th>Drugs</th>
+            <th>quantity</th>
+            {% if user.is_doctor %}
+            <th>Delete</th>
+            {% endif %}
+         </thead>
+         {% for line in object_list %}
+         <tr>
+            <td>{{ line.drugs }}</td>
+            <td>{{ line.qty }}</td>
+            {% if user.is_doctor %}
+            <td>
+               <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_prescription_line' line.id %}">Delete</a>
+            </td>
+            {% endif %}
+         </tr>
+         {% endfor %}
+         {% else %}
+         <p>No prescription lines.</p>
+         {% endif %}
+      </table>
+      {% if user.is_doctor %}
+      <div class="fieldWrapper">
+         <h5>Add new line:</h5>
+         <form action="" method="post">
+            {% csrf_token %}
+            {{ form.prescription }}
             <table class="table table-hover">
-                <thead>
-                    <th>Drugs</th>
-                    <th>quantity</th>
-                    {% if user.is_doctor %}
-                    <th>Delete</th>
-                    {% endif %}
-                </thead>
-            {% for line in object_list %}
-                <tr>
-                    <td>{{ line.drugs }}</td>
-                    <td>{{ line.qty }}</td>
-                    {% if user.is_doctor %}
-                    <td>
-                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_prescription_line' line.id %}">Delete</a>
-                    </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        {% else %}
-            <p>No prescription lines.</p>
-        {% endif %}
+               <thead>
+                  <th>Drugs</th>
+                  <th>quantity</th>
+                  <th></th>
+               </thead>
+               <tr>
+                  <td>{{ form.drugs }}</td>
+                  <td>{{ form.qty }}</td>
+                  <td><input class="btn btn-success btn-sm mt-1 mb-1" type="submit" value="Add"></td>
+               </tr>
             </table>
-        {% if user.is_doctor %}
-        <div class="fieldWrapper">
-            <h5>Add new line:</h5>
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form.prescription }}
-                <table class="table table-hover">
-                <thead>
-                    <th>Drugs</th>
-                    <th>quantity</th>
-                    <th></th>
-                </thead>
-                    <tr>
-                    <td>{{ form.drugs }}</td>
-                    <td>{{ form.qty }}</td>
-                    <td><input class="btn btn-success btn-sm mt-1 mb-1" type="submit" value="Add"></td>
-                </tr>
-                </table>
-            </form>
-        </div>
-        {% endif %}
-    </div>
+         </form>
+      </div>
+      {% endif %}
+   </div>
 </div>
 {% endblock %}

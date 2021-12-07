@@ -1,74 +1,68 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <a href="{% url 'update_patient' customuser.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update patient</button></a>
-    <a href="{% url 'delete_patient' customuser.id %}"><button class="btn btn-danger" style="margin: 20px 0">Delete patient</button></a>
-    {% if user.is_doctor %}
-    <a href="{% url 'create_prescription' customuser.id %}"><button class="btn btn-success" style="margin: 20px 0">Create prescription</button></a>
-    {% endif %}
-    {% if user.is_receptionist %}
-    <a href="{% url 'create_appointment' customuser.id %}"><button class="btn btn-success" style="margin: 20px 0">Create appointment</button></a>
-    {% endif %}
-
-    <div class="media">
-        <img class="rounded-circle account-img" src="{{ customuser.profile.photo.url }}">
-        <div class="media-body">
-          <h2 class="account-heading">{{ customuser.profile.name }} {{ customuser.profile.surname }}</h2>
-          <p class="text-secondary"><strong>Email: </strong>{{ customuser.email }}</p>
-          <p class="text-secondary"><strong>Doctor: </strong><a href="{% url 'doctor' customuser.my_doctor.id %}">{{ customuser.my_doctor.profile.name }} {{ customuser.my_doctor.profile.surname }}</a></p>
-          <p class="text-secondary"><strong>Phone: </strong>{{ customuser.profile.phone }}</p>
-          <p class="text-secondary"><strong>Birth date: </strong>{{ customuser.profile.birth_date }}</p>
-          <p class="text-secondary"><strong>Address: </strong>{{ customuser.profile.address }}</p>
-          <p class="text-secondary"><strong>Blood group: </strong>{{ customuser.profile.blood_group }}</p>
-        </div>
-    </div>
+<a href="{% url 'update_patient' customuser.id %}"><button class="btn btn-primary" style="margin: 20px 0">Update patient</button></a>
+<a href="{% url 'delete_patient' customuser.id %}"><button class="btn btn-danger" style="margin: 20px 0">Delete patient</button></a>
+{% if user.is_doctor %}
+<a href="{% url 'create_prescription' customuser.id %}"><button class="btn btn-success" style="margin: 20px 0">Create prescription</button></a>
+{% endif %}
+{% if user.is_receptionist %}
+<a href="{% url 'create_appointment' customuser.id %}"><button class="btn btn-success" style="margin: 20px 0">Create appointment</button></a>
+{% endif %}
+<div class="media">
+   <img class="rounded-circle account-img" src="{{ customuser.profile.photo.url }}">
+   <div class="media-body">
+      <h2 class="account-heading">{{ customuser.profile.name }} {{ customuser.profile.surname }}</h2>
+      <p class="text-secondary"><strong>Email: </strong>{{ customuser.email }}</p>
+      <p class="text-secondary"><strong>Doctor: </strong><a href="{% url 'doctor' customuser.my_doctor.id %}">{{ customuser.my_doctor.profile.name }} {{ customuser.my_doctor.profile.surname }}</a></p>
+      <p class="text-secondary"><strong>Phone: </strong>{{ customuser.profile.phone }}</p>
+      <p class="text-secondary"><strong>Birth date: </strong>{{ customuser.profile.birth_date }}</p>
+      <p class="text-secondary"><strong>Address: </strong>{{ customuser.profile.address }}</p>
+      <p class="text-secondary"><strong>Blood group: </strong>{{ customuser.profile.blood_group }}</p>
+   </div>
+</div>
 <hr>
-    <div style="margin-left:20px;margin-top:20px">
-        <h4>Prescriptions:</h4>
-        {% if object_list %}
-            <table class="table table-hover">
-                <thead>
-                    <th>Date</th>
-                    <th>Doctor</th>
-                    <th>Expiration</th>
-                    <th>Detail</th>
-                    <th>Update</th>
-                </thead>
-            {% for pre in object_list %}
-                <tr class="{% if pre.is_overdue %}table-light{% else %}table-success{% endif %}">
-                        <td>{{ pre.date }}</td>
-                        <td><a href="{% url 'doctor' pre.doctor.id %}">{{ pre.doctor.profile.name }}{{ pre.doctor.profile.surname }}</a></td>
-                        <td>{{ pre.expiration }}</td>
-                        <td>
-                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_prescription' pre.id %}">Update</a>
-                        </td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <p>No prescriptions.</p>
-        {% endif %}
-            </table>
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-    </div>
-
-
+<div style="margin-left:20px;margin-top:20px">
+   <h4>Prescriptions:</h4>
+   {% if object_list %}
+   <table class="table table-hover">
+      <thead>
+         <th>Date</th>
+         <th>Doctor</th>
+         <th>Expiration</th>
+         <th>Detail</th>
+         <th>Update</th>
+      </thead>
+      {% for pre in object_list %}
+      <tr class="{% if pre.is_overdue %}table-light{% else %}table-success{% endif %}">
+         <td>{{ pre.date }}</td>
+         <td><a href="{% url 'doctor' pre.doctor.id %}">{{ pre.doctor.profile.name }}{{ pre.doctor.profile.surname }}</a></td>
+         <td>{{ pre.expiration }}</td>
+         <td>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'prescription' pre.id %}">Details</a>
+         </td>
+         <td>
+            <a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'update_prescription' pre.id %}">Update</a>
+         </td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <p>No prescriptions.</p>
+      {% endif %}
+   </table>
+   <div class="pagination">
+      <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a href="?page=1">&laquo; first</a>
+      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+      <span class="current">
+      {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">next</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+      </span>
+   </div>
+</div>
 {% endblock %}

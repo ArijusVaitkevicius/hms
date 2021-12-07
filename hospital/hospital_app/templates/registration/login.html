@@ -1,28 +1,21 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
-
 {% block content %}
-
 {% if form.errors %}
-  <p>Login error, please try again!</p>
+<p>Login error, please try again!</p>
 {% endif %}
-
 {% if next %}
-  {% if user.is_authenticated %}
-    <p>You need to login to perform this operation.</p>
-  {% endif %}
+{% if user.is_authenticated %}
+<p>You need to login to perform this operation.</p>
 {% endif %}
-
+{% endif %}
 <div class="container" style="margin-top:50px;">
-    <h1>Login</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="submit" value="Login" class="btn btn-success">
-    </form>
-
-<a href="{% url 'password_reset' %}">Forgot your password?</a>
-
+   <h1>Login</h1>
+   <form method="POST">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" value="Login" class="btn btn-success">
+   </form>
+   <a href="{% url 'password_reset' %}">Forgot your password?</a>
 </div>
-
 {% endblock %}

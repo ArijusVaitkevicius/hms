@@ -1,53 +1,47 @@
 <style>
-.extra-form{
-display: flex;
-flex-direction: column;
-}
-.multiField {
-display: flex;
-flex-direction: row;
-margin: 10px;
-border: solid 1px #D3D3D3;
-border-radius: 5px;
-}
-.form-group {
-flex: 1;
-margin: 0 10px;
-}
+   .extra-form{
+   display: flex;
+   flex-direction: column;
+   }
+   .multiField {
+   display: flex;
+   flex-direction: row;
+   margin: 10px;
+   border: solid 1px #D3D3D3;
+   border-radius: 5px;
+   }
+   .form-group {
+   flex: 1;
+   margin: 0 10px;
+   }
 </style>
-
 {% extends "base.html" %}
 {% load bootstrap3 %}
 {% load crispy_forms_tags %}
-
-
 {% block content %}
 <br>
 <div class="container">
-    <h2>Prescription details</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-
-
-<div class="extra-form">
-    {% for form in inlines %}
-        {{ form|crispy }}
-    {% endfor %}
-</div>
-
-        <input name="add" type="submit" value="Submit" class="btn btn-success">
-    </form>
+   <h2>Prescription details</h2>
+   <form method="POST">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="extra-form">
+         {% for form in inlines %}
+         {{ form|crispy }}
+         {% endfor %}
+      </div>
+      <input name="add" type="submit" value="Submit" class="btn btn-success">
+   </form>
 </div>
 <script>
-var addButton = document.getElementsByName("add")[0];
-var patient = document.getElementsByName("patient")[0];
-var doctor = document.getElementsByName("doctor")[0];
+   var addButton = document.getElementsByName("add")[0];
+   var patient = document.getElementsByName("patient")[0];
+   var doctor = document.getElementsByName("doctor")[0];
 
-addButton.addEventListener("click", function () {
-    $(patient).removeAttr('disabled');
-    $(doctor).removeAttr('disabled');
-});
+   addButton.addEventListener("click", function () {
+       $(patient).removeAttr('disabled');
+       $(doctor).removeAttr('disabled');
+   });
 
 </script>
 {% endblock %}
