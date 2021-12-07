@@ -1,6 +1,8 @@
+import simplejson as simplejson
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.edit import FormMixin
-
+import json
 from .forms import AppointmentForm, CustomUserCreationForm, DrugForm
 from django.contrib.auth.decorators import login_required
 from .models import Appointment, CustomUser, Profile, Prescription, PrescriptionLine, Drug
@@ -14,6 +16,7 @@ from django.views.generic.list import MultipleObjectMixin
 from .filters import AppointmentFilter, PatientFilter, DoctorFilter, MyAppointmentFilter, DrugsFilter
 from datetime import date
 from extra_views import InlineFormSetFactory, CreateWithInlinesView, UpdateWithInlinesView
+from datetime import datetime, timedelta
 
 User = get_user_model()
 
@@ -30,8 +33,10 @@ def home(request):
             return render(request, 'receptionist_home.html', context)
 
         elif request.user.user_type == 'D':
-            completed_appointments = Appointment.objects.filter(status='C', doctor=request.user).order_by('-date', '-time')[:5]
-            pending_appointments = Appointment.objects.filter(status='P', doctor=request.user, date=date.today()).order_by('date', 'time')
+            completed_appointments = Appointment.objects.filter(status='C', doctor=request.user).order_by('-date',
+                                                                                                          '-time')[:5]
+            pending_appointments = Appointment.objects.filter(status='P', doctor=request.user,
+                                                              date=date.today()).order_by('date', 'time')
 
             context = {'completed_appointments': completed_appointments, 'pending_appointments': pending_appointments}
 
@@ -113,30 +118,9 @@ def patient_profile(request, pk):
     return render(request, 'update_profile.html', context)
 
 
-# @login_required
-# def create_appointment(request, pk):
-#     user = User.objects.get(pk=pk)
-#     if request.method == "POST":
-#         form = AppointmentForm(request.POST, instance=user)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, f"Appointment created")
-#             return redirect('patients')
-#     else:
-#         form = AppointmentForm(instance=user)
-#
-#     context = {
-#         'u_form': form,
-#     }
-#     return render(request, 'appointment_form.html', context)
-
-
 class AppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
-    # context_object_name = 'appointments_list'
-    # paginate_by = 5
-    # queryset = Appointment.objects.filter(status='P')
 
     def get_context_data(self, **kwargs):
         context = super(AppointmentsListView, self).get_context_data(**kwargs)
@@ -152,9 +136,6 @@ class AppointmentsListView(LoginRequiredMixin, ListView):
 class MyAppointmentsListView(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'appointments.html'
-    # context_object_name = 'appointments_list'
-    # paginate_by = 5
-    # queryset = Appointment.objects.filter(status='P')
 
     def get_context_data(self, **kwargs):
         context = super(MyAppointmentsListView, self).get_context_data(**kwargs)
@@ -172,6 +153,80 @@ class AppointmentsDetailView(LoginRequiredMixin, DetailView):
     template_name = 'appointment.html'
 
 
+def working_hours(timeslot, picked):
+    if timeslot == '0':
+        st = '08:00'
+        en = '12:00'
+    elif timeslot == '1':
+        st = '10:00'
+        en = '14:00'
+    elif timeslot == '2':
+        st = '12:00'
+        en = '16:00'
+    elif timeslot == '3':
+        st = '14:00'
+        en = '18:00'
+    elif timeslot == '4':
+        st = '16:00'
+        en = '20:00'
+    else:
+        st = '00:00'
+        en = '00:00'
+
+    start = datetime.strptime(st, '%H:%M')
+    end = datetime.strptime(en, '%H:%M')
+
+    seq = [start]
+
+    while seq[-1] < end:
+        start = start + timedelta(minutes=30)
+        seq.append(start)
+
+    time = []
+
+    for s in seq:
+        corrected = datetime.strftime(s, '%m/%d/%Y %H:%M')
+        time.append(corrected[-5:])
+
+    choices = []
+
+    new_picked = []
+
+    for new in picked:
+        new_picked.append(str(new))
+
+    for t in time:
+        if t not in picked:
+            # one_tuple = (t, t)
+            choices.append(t)
+        else:
+            continue
+
+    return choices
+
+
+def filter_times(request):
+    if request.method == "POST":
+        times = {}
+
+        picked_time_dict = Appointment.objects.filter(doctor=User.objects.get(pk=request.POST['doctor']), date=request.POST['date']).values('time')
+
+        picked_times = []
+
+        for dct in picked_time_dict:
+            picked_times.append(dct.get('time').strftime("%H:%M"))
+
+        timeslot = User.objects.get(pk=request.POST['doctor']).profile.shift
+
+        filtered_times = working_hours(timeslot, picked_times)
+        filtered_times.reverse()
+
+        for time in filtered_times:
+            times[time] = time
+
+        return HttpResponse(json.dumps(times), content_type='application/json')
+
+
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
     success_url = "/appointments"
@@ -182,7 +237,6 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         initial = super(AppointmentCreateView, self).get_initial()
         initial.update({'patient': User.objects.get(pk=self.kwargs['pk'])})
         initial.update({'doctor': User.objects.get(pk=self.kwargs['pk']).my_doctor})
-        AppointmentForm.timeslot = User.objects.get(pk=self.kwargs['pk']).my_doctor.profile.shift
 
         return initial
 
@@ -213,9 +267,6 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 class PatientsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'patients.html'
-    # context_object_name = 'patients_list'
-    # paginate_by = 10
-    # queryset = User.objects.filter(user_type='P')
 
     def get_context_data(self, **kwargs):
         context = super(PatientsListView, self).get_context_data(**kwargs)
@@ -231,9 +282,6 @@ class PatientsListView(LoginRequiredMixin, ListView):
 class MyPatientsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'patients.html'
-    # context_object_name = 'appointments_list'
-    # paginate_by = 5
-    # queryset = Appointment.objects.filter(status='P')
 
     def get_context_data(self, **kwargs):
         context = super(MyPatientsListView, self).get_context_data(**kwargs)
@@ -252,7 +300,7 @@ class PatientsDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
-        object_list = Prescription.objects.filter(patient=self.get_object()).order_by('-expiration',)
+        object_list = Prescription.objects.filter(patient=self.get_object()).order_by('-expiration', )
         context = super(PatientsDetailView, self).get_context_data(object_list=object_list, **kwargs)
 
         return context
@@ -280,9 +328,7 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
 class DoctorsListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'doctors.html'
-    # context_object_name = 'doctors_list'
-    # paginate_by = 10
-    # queryset = User.objects.filter(user_type='D')
+
 
     def get_context_data(self, **kwargs):
         context = super(DoctorsListView, self).get_context_data(**kwargs)
@@ -399,7 +445,8 @@ class PrescriptionLineDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'delete_prescription_line.html'
 
     def get_success_url(self):
-        return reverse('prescription', kwargs={'pk': PrescriptionLine.objects.get(pk=self.kwargs['pk']).prescription.pk})
+        return reverse('prescription',
+                       kwargs={'pk': PrescriptionLine.objects.get(pk=self.kwargs['pk']).prescription.pk})
 
 
 class DrugsListView(LoginRequiredMixin, ListView, FormMixin):

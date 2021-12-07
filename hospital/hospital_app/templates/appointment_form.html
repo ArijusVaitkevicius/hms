@@ -11,7 +11,7 @@
         <input name="add" type="submit" value="Submit" class="btn btn-success">
     </form>
 </div>
-<script>
+<script type="text/javascript">
 var addButton = document.getElementsByName("add")[0];
 var patient = document.getElementsByName("patient")[0];
 var doctor = document.getElementsByName("doctor")[0];
@@ -20,6 +20,27 @@ addButton.addEventListener("click", function () {
     $(patient).removeAttr('disabled');
     $(doctor).removeAttr('disabled');
 });
+
+
+var selectDate = document.getElementsByName("date")[0];
+var doctor = document.getElementsByName("doctor")[0];
+
+
+selectDate.addEventListener('change', function () {
+    const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+    $.post('/filter_times', {date: selectDate.value, doctor: doctor.value, csrfmiddlewaretoken: token}, function (data) {
+        alert(data);
+        times = data;
+
+        for (const [key, value] of Object.entries(times)) {
+            document.getElementById("id_time").getElementsByTagName( 'option' )[0].insertAdjacentHTML("afterend",
+                '<option value='+ key +'>'+ key +'</option>');
+        };
+});
+});
+
+
 
 </script>
 {% endblock %}

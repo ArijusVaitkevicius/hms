@@ -62,52 +62,7 @@ class PatientProfileUpdateForm(forms.ModelForm):
         }
 
 
-def working_hours(timeslot):
-    if timeslot == '0':
-        st = '08:00'
-        en = '12:00'
-    elif timeslot == '1':
-        st = '10:00'
-        en = '14:00'
-    elif timeslot == '2':
-        st = '12:00'
-        en = '16:00'
-    elif timeslot == '3':
-        st = '14:00'
-        en = '18:00'
-    elif timeslot == '4':
-        st = '16:00'
-        en = '20:00'
-    else:
-        st = '00:00'
-        en = '00:00'
-
-    start = datetime.strptime(st, '%H:%M')
-    end = datetime.strptime(en, '%H:%M')
-
-    seq = [start]
-
-    while seq[-1] < end:
-        start = start + timedelta(minutes=30)
-        seq.append(start)
-
-    time = []
-
-    for s in seq:
-        corrected = datetime.strftime(s, '%m/%d/%Y %H:%M')
-        time.append(corrected[-5:])
-
-    choices = []
-
-    for t in time:
-        one_tuple = (t, t)
-        choices.append(one_tuple)
-
-    return choices
-
-
 class AppointmentForm(forms.ModelForm):
-    timeslot = ''
     timestamp = ''
     doc = ''
 
@@ -121,7 +76,7 @@ class AppointmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AppointmentForm, self).__init__(*args, **kwargs)
         if self.instance:
-            self.fields['time'] = forms.ChoiceField(choices=working_hours(self.timeslot))
+            self.fields['time'] = forms.ChoiceField(choices=[('select_time', 'select_time')])
             self.initial['time'] = self.timestamp[:5]
             self.fields['patient'].widget.attrs['disabled'] = 'disabled'
             self.fields['doctor'].widget.attrs['disabled'] = 'disabled'

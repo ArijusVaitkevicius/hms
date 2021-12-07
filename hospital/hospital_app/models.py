@@ -229,3 +229,5 @@ class PrescriptionLine(models.Model):
     class Meta:
         verbose_name = 'Prescription line'
         verbose_name_plural = 'Prescription lines'
+
+
